@@ -15,5 +15,7 @@ namespace Vue.Splash_API.Models
         [Required]
         [Column(TypeName = "text")]
         public string Description { get; set; }
+        [Required]
+        public string ApplicationUserId { get; set; }
     }
 }
