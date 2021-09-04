@@ -31,14 +31,11 @@ namespace Vue.Splash_API.Data.Repositories
             return await _context.Photos.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<List<Photo>> Find(Func<Photo, bool> func)
+        public IEnumerable<Photo> Find(Func<Photo, bool> func)
         {
-            return await _context
+            return _context
                 .Photos
-                .Where(func)
-                .AsQueryable()
-                .AsNoTracking()
-                .ToListAsync();
+                .Where(func);
         }
 
         public void UpdatePhoto(int id)
