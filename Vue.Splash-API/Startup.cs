@@ -35,7 +35,7 @@ namespace Vue.Splash_API
         {
             services.AddControllers();
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IStorageService, StorageService>();
+            services.AddScoped<IStorageService, LocalStorageService>();
             services.AddScoped<IApplicationUserService, ApplicationUserService>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddSwaggerGen(c =>
