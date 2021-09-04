@@ -16,7 +16,15 @@ Rest api written with Asp.Net Core for an [unsplash](https://unsplash.com/) clon
 git clone https://github.com/Ola-jed/Vue.Splash-API.git
 cd Vue.Splash-API/Vue.Splash-API
 dotnet run
-
 ```
+You can also try the [frontend](https://github.com/tobihans/Vue.Splash) built by [@tobihans](https://github.com/tobihans)
 
-Here is the link for the [front repository](#)
+## TODO
+
+- [ ] Finish LocalStorageService implementation
+  - [ ] Delete a local file
+  - [ ] Update a local file
+- [ ] Make an custom client for [Backblaze](https://www.backblaze.com/)
+- [ ] Drive implementation ?
+- [ ] Password reset (import [DotWiki](https://github.com/Ola-jed/DotWikiApi) mail client)
+- [ ] Unit tests
