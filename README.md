@@ -22,9 +22,9 @@ You can also try the [frontend](https://github.com/tobihans/Vue.Splash) built by
 ## TODO
 
 - [ ] Finish LocalStorageService implementation
-  - [ ] Delete a local file
+  - [x] Delete a local file
   - [ ] Update a local file
-- [ ] Make an custom client for [Backblaze](https://www.backblaze.com/)
+- [x] Make an custom client for [Backblaze](https://www.backblaze.com/)
 - [ ] Drive implementation ?
 - [ ] Password reset (import [DotWiki](https://github.com/Ola-jed/DotWikiApi) mail client)
 - [ ] Unit tests
