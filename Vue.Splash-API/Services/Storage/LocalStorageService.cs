@@ -15,7 +15,7 @@ namespace Vue.Splash_API.Services.Storage
             _env = env;
         }
 
-        public async Task<string> SaveImage(IFormFile file)
+        public async Task<string> Save(IFormFile file)
         {
             var extension = Path.GetExtension(file.FileName);
             var fileName = DateTime.Now.Ticks + extension;
@@ -33,9 +33,14 @@ namespace Vue.Splash_API.Services.Storage
             return path;
         }
 
-        public FileStream GetStream(string path)
+        public Stream GetStream(string path)
         {
-            return System.IO.File.OpenRead(path);
+            return File.OpenRead(path);
+        }
+
+        public void Delete(string path)
+        {
+            File.Delete(path);
         }
     }
 }

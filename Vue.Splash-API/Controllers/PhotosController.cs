@@ -38,6 +38,7 @@ namespace Vue.Splash_API.Controllers
         public async Task<ActionResult> GetAll()
         {
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
+            Console.WriteLine(usr);
             var photos = _photoRepository.Find(p => p.ApplicationUserId == usr.Id);
             return Ok(_mapper.Map<IEnumerable<PhotoReadDto>>(photos));
         }
@@ -77,7 +78,7 @@ namespace Vue.Splash_API.Controllers
         {
             try
             {
-                var path = await _storageService.SaveImage(photoCreateDto.Photo);
+                var path = await _storageService.Save(photoCreateDto.Photo);
                 var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
                 var photo = _mapper.Map<Photo>(photoCreateDto);
                 photo.Path = path;
@@ -93,9 +94,20 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public ActionResult DeletePhoto(int id)
+        public async Task<ActionResult> DeletePhoto(int id)
         {
-            throw new NotImplementedException();
+            var photo = await _photoRepository.GetPhoto(id);
+            if (photo == null)
+            {
+                return NotFound();
+            }
+            var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
+            if (usr.Id != photo.ApplicationUserId)
+            {
+                return Forbid();
+            }
+            _storageService.Delete(photo.Path);
+            return NoContent();
         }
     }
 }
