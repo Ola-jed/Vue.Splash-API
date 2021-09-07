@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Backblaze_Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,8 +35,16 @@ namespace Vue.Splash_API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            var config = new BackblazeConfig()
+            {
+                KeyId = Configuration["KeyId"],
+                AppKey = Configuration["AppKey"],
+                BucketId = Configuration["BucketId"],
+                ApiBase = "https://api.backblazeb2.com/b2api/v2/"
+            };
+            services.AddSingleton(config);
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IStorageService, LocalStorageService>();
+            services.AddScoped<IStorageService, BackblazeStorageService>();
             services.AddScoped<IApplicationUserService, ApplicationUserService>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddSwaggerGen(c =>
@@ -73,6 +82,7 @@ namespace Vue.Splash_API
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<SplashContext>()
                 .AddDefaultTokenProviders();
+            services.AddMemoryCache();
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
