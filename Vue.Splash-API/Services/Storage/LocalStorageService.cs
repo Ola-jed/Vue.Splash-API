@@ -33,14 +33,15 @@ namespace Vue.Splash_API.Services.Storage
             return path;
         }
 
-        public Stream GetStream(string path)
+        public Task<Stream> GetStream(string path)
         {
-            return File.OpenRead(path);
+            return Task.FromResult<Stream>(File.OpenRead(path));
         }
 
-        public void Delete(string path)
+        public Task Delete(string path)
         {
             File.Delete(path);
+            return Task.CompletedTask;
         }
     }
 }

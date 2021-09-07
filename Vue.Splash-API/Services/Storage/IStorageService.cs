@@ -7,7 +7,7 @@ namespace Vue.Splash_API.Services.Storage
     public interface IStorageService
     {
         Task<string> Save(IFormFile file);
-        Stream GetStream(string path);
-        void Delete(string path);
+        Task<Stream> GetStream(string path);
+        Task Delete(string path);
     }
 }
