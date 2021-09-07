@@ -6,9 +6,11 @@ Rest api written with Asp.Net Core for an [unsplash](https://unsplash.com/) clon
 
 [Dotnet](https://dotnet.microsoft.com/download)
 
-> Postgres is the used dbms
+> [Postgres](https://www.postgresql.org/) is the used dbms
 >
-> Create the database `splash` in postgres and add the _**UserId**_ and _**Password**_ credentials
+> Create the database `splash` in postgres and add the _**UserId**_, _**Password**_ credentials for the database
+> 
+> Add the _**KeyId**_, _**AppKey**_, _**BucketId**_ credentials for Backblaze 
 
 ## Setup
 
