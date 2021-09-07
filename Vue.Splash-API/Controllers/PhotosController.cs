@@ -38,7 +38,6 @@ namespace Vue.Splash_API.Controllers
         public async Task<ActionResult> GetAll()
         {
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
-            Console.WriteLine(usr);
             var photos = _photoRepository.Find(p => p.ApplicationUserId == usr.Id);
             return Ok(_mapper.Map<IEnumerable<PhotoReadDto>>(photos));
         }
@@ -70,7 +69,7 @@ namespace Vue.Splash_API.Controllers
                 return Forbid();
             }
 
-            return File(_storageService.GetStream(photo.Path),"image/*");
+            return File(await _storageService.GetStream(photo.Path),"image/*");
         }
 
         [HttpPost]
@@ -89,7 +88,7 @@ namespace Vue.Splash_API.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,e);
+                return StatusCode(StatusCodes.Status500InternalServerError,e.ToString());
             }
         }
 
@@ -106,7 +105,8 @@ namespace Vue.Splash_API.Controllers
             {
                 return Forbid();
             }
-            _storageService.Delete(photo.Path);
+            await _storageService.Delete(photo.Path);
+            _photoRepository.DeletePhoto(photo);
             return NoContent();
         }
     }
