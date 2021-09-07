@@ -9,6 +9,7 @@ namespace Vue.Splash_API.Profiles
         public PhotoProfile()
         {
             CreateMap<PhotoCreateDto, Photo>();
+            CreateMap<PhotoUpdateDto, Photo>();
             CreateMap<Photo, PhotoReadDto>();
         }
     }

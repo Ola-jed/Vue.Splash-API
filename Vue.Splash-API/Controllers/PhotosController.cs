@@ -92,6 +92,21 @@ namespace Vue.Splash_API.Controllers
             }
         }
 
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> UpdatePhoto(int id,PhotoUpdateDto photoUpdateDto)
+        {
+            var photo = await _photoRepository.GetPhoto(id);
+            if (photo == null)
+            {
+                return NotFound();
+            }
+
+            var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
+            _mapper.Map(photoUpdateDto, photo);
+            await _photoRepository.SaveChanges();
+            return NoContent();
+        }
+
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeletePhoto(int id)
         {
