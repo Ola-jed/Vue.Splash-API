@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Vue.Splash_API.Dtos;
 using Vue.Splash_API.Models;
 
 namespace Vue.Splash_API.Services.User
@@ -11,6 +12,7 @@ namespace Vue.Splash_API.Services.User
         Task<ApplicationUser> FindUserByUserName(string userName);
         Task<IList<string>> GetUserRoles(ApplicationUser applicationUser);
         Task<IdentityResult> CreateUser(ApplicationUser user, string password);
+        Task<IdentityResult> UpdateUser(ApplicationUser initialValue, AccountUpdateDto updateDto);
         Task<IdentityResult> DeleteUser(ApplicationUser user);
         Task<bool> CheckPassword(string username, string password);
     }
