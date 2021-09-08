@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Vue.Splash_API.Dtos;
 using Vue.Splash_API.Models;
 
 namespace Vue.Splash_API.Services.User
@@ -39,6 +40,13 @@ namespace Vue.Splash_API.Services.User
         public async Task<IdentityResult> CreateUser(ApplicationUser user, string password)
         {
             return await _userManager.CreateAsync(user,password);
+        }
+
+        public async Task<IdentityResult> UpdateUser(ApplicationUser initialValue, AccountUpdateDto updateDto)
+        {
+            initialValue.Email = updateDto.Email;
+            initialValue.UserName = updateDto.Username;
+            return await _userManager.UpdateAsync(initialValue);
         }
 
         public async Task<IdentityResult> DeleteUser(ApplicationUser user)
