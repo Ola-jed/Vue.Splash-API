@@ -15,6 +15,7 @@ namespace Vue.Splash_API.Services.User
         Task<IList<string>> GetUserRoles(ApplicationUser applicationUser);
         Task<IdentityResult> CreateUser(ApplicationUser user, string password);
         Task<IdentityResult> UpdateUser(ApplicationUser initialValue, AccountUpdateDto updateDto);
+        Task<IdentityResult> UpdatePassword(ApplicationUser user, string currentPassword, string newPassword);
         Task<IdentityResult> DeleteUser(ApplicationUser user);
         Task<bool> CheckPassword(string username, string password);
     }

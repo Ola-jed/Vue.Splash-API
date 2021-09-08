@@ -69,6 +69,11 @@ namespace Vue.Splash_API.Services.User
             return await _userManager.UpdateAsync(initialValue);
         }
 
+        public async Task<IdentityResult> UpdatePassword(ApplicationUser user,string currentPassword,string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(user,currentPassword,newPassword);
+        }
+
         public async Task<IdentityResult> DeleteUser(ApplicationUser user)
         {
             return await _userManager.DeleteAsync(user);
