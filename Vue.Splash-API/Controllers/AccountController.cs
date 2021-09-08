@@ -43,7 +43,7 @@ namespace Vue.Splash_API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            var loginDto = new LoginDto { Username = usr.UserName, Password = accountUpdateDto.Password };
+            var loginDto = new LoginDto { Identifier = usr.UserName, Password = accountUpdateDto.Password };
             var validCredentials = await _authService.ValidateUserCredentials(loginDto);
             if (!validCredentials)
             {
@@ -65,7 +65,7 @@ namespace Vue.Splash_API.Controllers
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
             var loginDto = new LoginDto()
             {
-                Username = usr.UserName,
+                Identifier = usr.UserName,
                 Password = passwordDto.Password
             };
             var validCredentials = await _authService.ValidateUserCredentials(loginDto);

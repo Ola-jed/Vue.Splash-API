@@ -9,7 +9,9 @@ namespace Vue.Splash_API.Services.User
     public interface IApplicationUserService
     {
         Task<ApplicationUser> FindUserById(string id);
+        Task<ApplicationUser> FindUserByIdentifier(string identifier);
         Task<ApplicationUser> FindUserByUserName(string userName);
+        Task<ApplicationUser> FindUserByEmail(string email);
         Task<IList<string>> GetUserRoles(ApplicationUser applicationUser);
         Task<IdentityResult> CreateUser(ApplicationUser user, string password);
         Task<IdentityResult> UpdateUser(ApplicationUser initialValue, AccountUpdateDto updateDto);

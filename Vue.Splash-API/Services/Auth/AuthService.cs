@@ -27,8 +27,8 @@ namespace Vue.Splash_API.Services.Auth
 
         public async Task<bool> ValidateUserCredentials(LoginDto loginDto)
         {
-            var user = await _userService.FindUserByUserName(loginDto.Username);
-            return user != null && await _userService.CheckPassword(loginDto.Username, loginDto.Password);
+            var user = await _userService.FindUserByIdentifier(loginDto.Identifier);
+            return user != null && await _userService.CheckPassword(user.UserName, loginDto.Password);
         }
 
         public async Task<(IdentityResult, ApplicationUser)> RegisterUser(RegisterDto registerDto)
@@ -55,7 +55,8 @@ namespace Vue.Splash_API.Services.Auth
             {
                 return null;
             }
-            var user = await _userService.FindUserByUserName(loginDto.Username);
+
+            var user = await _userService.FindUserByIdentifier(loginDto.Identifier);
             var userRoles = await _userService.GetUserRoles(user);
             var authClaims = new List<Claim>
             {
