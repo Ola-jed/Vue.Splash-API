@@ -24,6 +24,8 @@ namespace Vue.Splash_API
 {
     public class Startup
     {
+        private readonly string OriginsAllowed = "_originsAllowed";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -83,6 +85,15 @@ namespace Vue.Splash_API
                 .AddEntityFrameworkStores<SplashContext>()
                 .AddDefaultTokenProviders();
             services.AddMemoryCache();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: OriginsAllowed,
+                    corsPolicyBuilder =>
+                    {
+                        corsPolicyBuilder.WithOrigins("http://localhost:3000",
+                            "http://localhost:8080");
+                    });
+            });
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -117,6 +128,7 @@ namespace Vue.Splash_API
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseRouting();
+            app.UseCors(OriginsAllowed);
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
