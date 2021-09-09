@@ -16,7 +16,7 @@ namespace Vue.Splash_API.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class PhotosController: ControllerBase
+    public class PhotosController : ControllerBase
     {
         private readonly IStorageService _storageService;
         private readonly IApplicationUserService _userService;
@@ -42,7 +42,7 @@ namespace Vue.Splash_API.Controllers
             return Ok(_mapper.Map<IEnumerable<PhotoReadDto>>(photos));
         }
 
-        [HttpGet("{id:int}",Name = "Get")]
+        [HttpGet("{id:int}", Name = "Get")]
         public async Task<ActionResult> Get(int id)
         {
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
@@ -51,6 +51,7 @@ namespace Vue.Splash_API.Controllers
             {
                 return NotFound();
             }
+
             if (usr.Id != photo.ApplicationUserId)
             {
                 return Forbid();
@@ -69,11 +70,11 @@ namespace Vue.Splash_API.Controllers
                 return Forbid();
             }
 
-            return File(await _storageService.GetStream(photo.Path),"image/*");
+            return File(await _storageService.GetStream(photo.Path), "image/*");
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromForm]PhotoCreateDto photoCreateDto)
+        public async Task<ActionResult> Post([FromForm] PhotoCreateDto photoCreateDto)
         {
             try
             {
@@ -84,16 +85,16 @@ namespace Vue.Splash_API.Controllers
                 photo.ApplicationUserId = usr.Id;
                 await _photoRepository.CreatePhoto(photo);
                 await _photoRepository.SaveChanges();
-                return CreatedAtRoute(nameof(Get),new {photo.Id},_mapper.Map<PhotoReadDto>(photo));
+                return CreatedAtRoute(nameof(Get), new { photo.Id }, _mapper.Map<PhotoReadDto>(photo));
             }
             catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,e.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, e.ToString());
             }
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult> UpdatePhoto(int id,PhotoUpdateDto photoUpdateDto)
+        public async Task<ActionResult> UpdatePhoto(int id, PhotoUpdateDto photoUpdateDto)
         {
             var photo = await _photoRepository.GetPhoto(id);
             if (photo == null)
@@ -102,6 +103,11 @@ namespace Vue.Splash_API.Controllers
             }
 
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
+            if (usr.Id != photo.ApplicationUserId)
+            {
+                return Forbid();
+            }
+
             _mapper.Map(photoUpdateDto, photo);
             await _photoRepository.SaveChanges();
             return NoContent();
@@ -115,11 +121,13 @@ namespace Vue.Splash_API.Controllers
             {
                 return NotFound();
             }
+
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
             if (usr.Id != photo.ApplicationUserId)
             {
                 return Forbid();
             }
+
             await _storageService.Delete(photo.Path);
             _photoRepository.DeletePhoto(photo);
             return NoContent();
