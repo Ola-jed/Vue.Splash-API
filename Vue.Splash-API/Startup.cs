@@ -90,8 +90,10 @@ namespace Vue.Splash_API
                 options.AddPolicy(name: OriginsAllowed,
                     corsPolicyBuilder =>
                     {
-                        corsPolicyBuilder.WithOrigins("http://localhost:3000",
-                            "http://localhost:8080");
+                        corsPolicyBuilder
+                            .AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
                     });
             });
             services.AddAuthentication(options =>
