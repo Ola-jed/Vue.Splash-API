@@ -43,7 +43,7 @@ namespace Vue.Splash_API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            var loginDto = new LoginDto { Username = usr.UserName, Password = accountUpdateDto.Password };
+            var loginDto = new LoginDto { Identifier = usr.UserName, Password = accountUpdateDto.Password };
             var validCredentials = await _authService.ValidateUserCredentials(loginDto);
             if (!validCredentials)
             {
@@ -59,13 +59,31 @@ namespace Vue.Splash_API.Controllers
                 });
         }
 
+        [HttpPut("password")]
+        public async Task<ActionResult> UpdatePassword(UpdatePasswordDto passwordDto)
+        {
+            var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
+            if (! await _userService.CheckPassword(usr.UserName, passwordDto.CurrentPassword))
+            {
+                return Unauthorized();
+            }
+
+            var res = await _userService.UpdatePassword(usr, passwordDto.CurrentPassword, passwordDto.NewPassword);
+            return res.Succeeded
+                ? NoContent()
+                : StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    res.Errors
+                });
+        }
+
         [HttpDelete]
         public async Task<ActionResult> Delete(PasswordDto passwordDto)
         {
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
             var loginDto = new LoginDto()
             {
-                Username = usr.UserName,
+                Identifier = usr.UserName,
                 Password = passwordDto.Password
             };
             var validCredentials = await _authService.ValidateUserCredentials(loginDto);

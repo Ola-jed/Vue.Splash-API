@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +35,23 @@ namespace Vue.Splash_API.Services.User
                 .FirstOrDefaultAsync(usr => usr.UserName == userName);
         }
 
+
+        public async Task<ApplicationUser> FindUserByIdentifier(string identifier)
+        {
+            return await _userManager
+                .Users
+                .Include(usr => usr.Photos)
+                .FirstOrDefaultAsync(usr => usr.UserName == identifier || usr.Email == identifier);
+        }
+
+        public async Task<ApplicationUser> FindUserByEmail(string email)
+        {
+            return await _userManager
+                .Users
+                .Include(usr => usr.Photos)
+                .FirstOrDefaultAsync(usr => usr.Email == email);
+        }
+
         public async Task<IList<string>> GetUserRoles(ApplicationUser applicationUser)
         {
             return await _userManager.GetRolesAsync(applicationUser);
@@ -47,6 +67,11 @@ namespace Vue.Splash_API.Services.User
             initialValue.Email = updateDto.Email;
             initialValue.UserName = updateDto.Username;
             return await _userManager.UpdateAsync(initialValue);
+        }
+
+        public async Task<IdentityResult> UpdatePassword(ApplicationUser user,string currentPassword,string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(user,currentPassword,newPassword);
         }
 
         public async Task<IdentityResult> DeleteUser(ApplicationUser user)
