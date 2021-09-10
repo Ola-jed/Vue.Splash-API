@@ -17,6 +17,7 @@ Rest api written with Asp.Net Core for an [unsplash](https://unsplash.com/) clon
 ```shell
 git clone https://github.com/Ola-jed/Vue.Splash-API.git
 cd Vue.Splash-API/Vue.Splash-API
+dotnet ef database update
 dotnet run
 ```
 You can also try the [frontend](https://github.com/tobihans/Vue.Splash) built by [@tobihans](https://github.com/tobihans)
