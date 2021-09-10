@@ -127,10 +127,9 @@ namespace Vue.Splash_API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Vue.Splash_API v1"));
             }
 
-//            app.UseHttpsRedirection();
-            app.UseAuthentication();
             app.UseRouting();
             app.UseCors(OriginsAllowed);
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

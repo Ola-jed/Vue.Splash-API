@@ -5,6 +5,6 @@ namespace Vue.Splash_API.Dtos
     public record PasswordDto
     {
         [Required(ErrorMessage = "Password is required")]
-        public string Password { get; set; }
+        public string Password { get; init; }
     }
 }

@@ -35,6 +35,8 @@ namespace Vue.Splash_API.Data.Repositories
         {
             return _context
                 .Photos
+                .AsNoTracking()
+                .AsEnumerable()
                 .Where(func);
         }
 
