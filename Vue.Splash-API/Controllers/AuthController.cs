@@ -35,7 +35,7 @@ namespace Vue.Splash_API.Controllers
                         Status = "Error",
                         result.Errors
                     })
-                : Ok();
+                : NoContent();
         }
 
         [HttpPost("login")]

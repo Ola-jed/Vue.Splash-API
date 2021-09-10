@@ -8,12 +8,12 @@ namespace Vue.Splash_API.Dtos
     {
         [Required]
         [MaxLength(100)]
-        public string Label { get; set; }
+        public string Label { get; init; }
         [Required]
-        public string Description { get; set; }
+        public string Description { get; init; }
         [Required]
         [MaxFileSize(5*1024*1024)]
         [AllowedExtensions(".jpg,.jpeg,.png,.webp")]
-        public IFormFile Photo { get; set; }
+        public IFormFile Photo { get; init; }
     }
 }
