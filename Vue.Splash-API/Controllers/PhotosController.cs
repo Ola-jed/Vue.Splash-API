@@ -45,32 +45,29 @@ namespace Vue.Splash_API.Controllers
         [HttpGet("{id:int}", Name = "Get")]
         public async Task<ActionResult> Get(int id)
         {
-            var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
             var photo = await _photoRepository.GetPhoto(id);
             if (photo == null)
             {
                 return NotFound();
             }
 
-            if (usr.Id != photo.ApplicationUserId)
-            {
-                return Forbid();
-            }
-
-            return Ok(_mapper.Map<PhotoReadDto>(photo));
+            var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
+            return usr.Id != photo.ApplicationUserId ? Forbid() : Ok(_mapper.Map<PhotoReadDto>(photo));
         }
 
         [HttpGet("{id:int}/download")]
         public async Task<ActionResult> DownloadPhoto(int id)
         {
-            var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
             var photo = await _photoRepository.GetPhoto(id);
-            if (usr.Id != photo.ApplicationUserId)
+            if (photo == null)
             {
-                return Forbid();
+                return NotFound();
             }
 
-            return File(await _storageService.GetStream(photo.Path), "image/*");
+            var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
+            return photo.ApplicationUserId != usr.Id
+                ? Forbid()
+                : File(await _storageService.GetStream(photo.Path), "image/*");
         }
 
         [HttpPost]
