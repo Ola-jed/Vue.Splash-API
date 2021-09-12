@@ -44,7 +44,7 @@ namespace Vue.Splash_API.Controllers
             var token = await _authService.GenerateJwt(model);
             if (token == null)
             {
-                return Unauthorized();
+                return BadRequest();
             }
             return Ok(new
             {
