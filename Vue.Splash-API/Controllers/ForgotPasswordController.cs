@@ -1,4 +1,5 @@
-using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Vue.Splash_API.Dtos;
 using Vue.Splash_API.Services.Mail;
@@ -21,15 +22,32 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpPost("forgot")]
-        public ActionResult SendPasswordResetMail(ForgotPasswordDto forgotPasswordDto)
+        public async Task<ActionResult> SendPasswordResetMail(ForgotPasswordDto forgotPasswordDto)
         {
-            throw new NotImplementedException();
+            var user = await _userService.FindUserByEmail(forgotPasswordDto.Email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var token = await _userService.GenerateResetPasswordToken(null);
+            await _mailService.SendEmailAsync(new ForgotPasswordMail(user.UserName,user.Email,token));
+            return Ok();
         }
 
         [HttpPost("reset")]
-        public ActionResult ResetUserPassword(PasswordResetDto passwordResetDto)
+        public async Task<ActionResult> ResetUserPassword(PasswordResetDto passwordResetDto)
         {
-            throw new NotImplementedException();
+            var user = await _userService.FindUserByEmail(passwordResetDto.Email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userService.ResetUserPassword(user, passwordResetDto.Token, passwordResetDto.Password);
+            return result.Succeeded
+                ? NoContent()
+                : StatusCode(StatusCodes.Status500InternalServerError, result.Errors);
         }
     }
 }
