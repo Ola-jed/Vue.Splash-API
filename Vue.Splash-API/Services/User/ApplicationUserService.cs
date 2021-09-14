@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -83,6 +80,17 @@ namespace Vue.Splash_API.Services.User
         {
             var user = await FindUserByUserName(username);
             return await _userManager.CheckPasswordAsync(user, password);
+        }
+
+        public async Task<string> GenerateResetPasswordToken(ApplicationUser user)
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            return token;
+        }
+
+        public async Task<IdentityResult> ResetUserPassword(ApplicationUser user,string token,string newPassword)
+        {
+            return await _userManager.ResetPasswordAsync(user, token, newPassword);
         }
     }
 }
