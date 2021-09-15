@@ -22,7 +22,7 @@ namespace Vue.Splash_API.Controllers
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             var (result, user) = await _authService.RegisterUser(registerDto);
-            if ((result,user) == (null, null))
+            if ((result, user) == (null, null))
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { Status = "Error", Message = "User already exists!" });
@@ -32,7 +32,6 @@ namespace Vue.Splash_API.Controllers
                 ? StatusCode(StatusCodes.Status500InternalServerError,
                     new
                     {
-                        Status = "Error",
                         result.Errors
                     })
                 : NoContent();
@@ -47,11 +46,10 @@ namespace Vue.Splash_API.Controllers
                 return BadRequest();
             }
 
-            if (! await _authService.IsEmailConfirmed(model.Identifier))
+            if (!await _authService.IsEmailConfirmed(model.Identifier))
             {
                 return BadRequest(new
                 {
-                    Status = "Error",
                     Message = "Email not verified"
                 });
             }
