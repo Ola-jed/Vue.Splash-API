@@ -47,7 +47,7 @@ namespace Vue.Splash_API
             services.AddTransient<IMailService, MailService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedEmail = true)
                 .AddEntityFrameworkStores<SplashContext>()
                 .AddDefaultTokenProviders();
             services.AddMemoryCache();

@@ -1,4 +1,3 @@
-using System;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using System.Threading.Tasks;

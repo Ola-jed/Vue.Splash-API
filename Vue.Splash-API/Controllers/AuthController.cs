@@ -46,6 +46,16 @@ namespace Vue.Splash_API.Controllers
             {
                 return BadRequest();
             }
+
+            if (! await _authService.IsEmailConfirmed(model.Identifier))
+            {
+                return BadRequest(new
+                {
+                    Status = "Error",
+                    Message = "Email not verified"
+                });
+            }
+
             return Ok(new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),

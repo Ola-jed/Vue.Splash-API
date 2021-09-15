@@ -82,6 +82,12 @@ namespace Vue.Splash_API.Services.User
             return await _userManager.CheckPasswordAsync(user, password);
         }
 
+        public async Task<bool> IsEmailConfirmed(string email)
+        {
+            var user = await FindUserByEmail(email);
+            return await _userManager.IsEmailConfirmedAsync(user);
+        }
+
         public async Task<string> GenerateResetPasswordToken(ApplicationUser user)
         {
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);

@@ -40,10 +40,11 @@ namespace Vue.Splash_API.Services.Mail
             htmlBuilder.Append($"Hello {_userName} <br/>");
             htmlBuilder.Append("Looks like you have lost your password on Vue.Splash.<br/>");
             htmlBuilder.Append("Use the following token to reset your password.<br />");
-            htmlBuilder.Append($"Here is the token : <strong>{_token}</strong>.<br />");
+            htmlBuilder.Append($"Here is the token : <strong>{_token}</strong><br />");
+            htmlBuilder.Append($"Or click on the following link <a href=\"http://localhost:8080/{_token}\">Reset password</a>.<br />");
             htmlBuilder.Append("If it was not you who started this process, ignore this email.<br />");
             htmlBuilder.Append("Thanks. <br />");
-            htmlBuilder.Append("<a href=\"https://localhost:8080\">Vue.Splash</a>");
+            htmlBuilder.Append("<a href=\"http://localhost:8080\">Vue.Splash</a>");
             return htmlBuilder.ToString();
         }
 
@@ -53,7 +54,7 @@ namespace Vue.Splash_API.Services.Mail
             textBuilder.AppendLine($"Hello {_userName}");
             textBuilder.AppendLine("Looks like you have lost your password on Vue.Splash.");
             textBuilder.AppendLine("Use the following token to reset your password.");
-            textBuilder.AppendLine($"Here is the token : {_token}.");
+            textBuilder.AppendLine($"Here is the token : {_token}");
             textBuilder.AppendLine("If it was not you who started this process, ignore this email.");
             textBuilder.AppendLine("Thanks.");
             textBuilder.AppendLine("Vue.Splash");

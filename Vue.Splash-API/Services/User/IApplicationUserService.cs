@@ -18,6 +18,7 @@ namespace Vue.Splash_API.Services.User
         Task<IdentityResult> UpdatePassword(ApplicationUser user, string currentPassword, string newPassword);
         Task<IdentityResult> DeleteUser(ApplicationUser user);
         Task<bool> CheckPassword(string username, string password);
+        Task<bool> IsEmailConfirmed(string email);
         Task<string> GenerateResetPasswordToken(ApplicationUser user);
         Task<IdentityResult> ResetUserPassword(ApplicationUser user, string token, string newPassword);
     }
