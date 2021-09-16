@@ -7,9 +7,9 @@ Rest api written with Asp.Net Core for an [unsplash](https://unsplash.com/) clon
 - [Dotnet](https://dotnet.microsoft.com/download)
 - [Postgres](https://www.postgresql.org/)
 - [A Backblaze account](https://www.backblaze.com/)
-> 
+>
 > Create the database `splash` in postgres and add the _**UserId**_, _**Password**_ credentials for the database.
-> 
+>
 > Add the _**KeyId**_, _**AppKey**_, _**BucketId**_ credentials for Backblaze.
 
 ## Setup
@@ -20,6 +20,7 @@ cd Vue.Splash-API/Vue.Splash-API
 dotnet ef database update
 dotnet run
 ```
+
 You can also try the [frontend](https://github.com/tobihans/Vue.Splash) built by [@tobihans](https://github.com/tobihans)
 
 ## TODO
@@ -29,5 +30,5 @@ You can also try the [frontend](https://github.com/tobihans/Vue.Splash) built by
   - [ ] Update a local file
 - [x] Make an custom client for [Backblaze](https://www.backblaze.com/)
 - [ ] Drive implementation ?
-- [ ] Password reset (import [DotWiki](https://github.com/Ola-jed/DotWikiApi) mail client)
+- [x] Password reset (import [DotWiki](https://github.com/Ola-jed/DotWikiApi) mail client)
 - [ ] Unit tests
