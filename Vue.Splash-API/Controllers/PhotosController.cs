@@ -70,6 +70,15 @@ namespace Vue.Splash_API.Controllers
                 : File(await _storageService.GetStream(photo.Path), "image/*");
         }
 
+        [HttpGet("search")]
+        public async Task<ActionResult> Search([FromQuery] PhotoSearchDto searchDto)
+        {
+            var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
+            var predicate = new Func<Photo, bool>(photo =>
+                photo.Label.Contains(searchDto.Search) && photo.ApplicationUserId == usr.Id);
+            return Ok(_mapper.Map<IEnumerable<PhotoReadDto>>(_photoRepository.Find(predicate)));
+        }
+
         [HttpPost]
         public async Task<ActionResult> Post([FromForm] PhotoCreateDto photoCreateDto)
         {

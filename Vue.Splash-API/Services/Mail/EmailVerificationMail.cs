@@ -3,13 +3,13 @@ using MimeKit;
 
 namespace Vue.Splash_API.Services.Mail
 {
-    public class ForgotPasswordMail: IMailable
+    public class EmailVerificationMail: IMailable
     {
         private readonly string _userName;
         private readonly string _destinationMail;
         private readonly string _token;
 
-        public ForgotPasswordMail(string userName,
+        public EmailVerificationMail(string userName,
             string destinationMail,
             string token)
         {
@@ -22,7 +22,7 @@ namespace Vue.Splash_API.Services.Mail
         {
             var email = new MimeMessage()
             {
-                Subject = "Vue.Splash : Forgotten password",
+                Subject = "Vue.Splash : Email verification",
                 To = { MailboxAddress.Parse(_destinationMail) }
             };
             var builder = new BodyBuilder()
@@ -38,11 +38,10 @@ namespace Vue.Splash_API.Services.Mail
         {
             var htmlBuilder = new StringBuilder();
             htmlBuilder.Append($"Hello {_userName} <br/>");
-            htmlBuilder.Append("Looks like you have lost your password on Vue.Splash.<br/>");
-            htmlBuilder.Append("Use the following token to reset your password.<br />");
+            htmlBuilder.Append("You are receiving this email to verify your email.<br/>");
+            htmlBuilder.Append("Use the following token to prove your identity.<br />");
             htmlBuilder.Append($"Here is the token : <strong>{_token}</strong><br />");
-            htmlBuilder.Append($"Or click on the following link <a href=\"http://localhost:8080/account/password-reset{_token}\">Reset password</a>.<br />");
-            htmlBuilder.Append("If it was not you who started this process, ignore this email.<br />");
+            htmlBuilder.Append($"Or click on the following link <a href=\"http://localhost:8080/account/verify/{_token}\">Verify email</a>.<br />");
             htmlBuilder.Append("Thanks. <br />");
             htmlBuilder.Append("<a href=\"http://localhost:8080\">Vue.Splash</a>");
             return htmlBuilder.ToString();
@@ -52,10 +51,9 @@ namespace Vue.Splash_API.Services.Mail
         {
             var textBuilder = new StringBuilder();
             textBuilder.AppendLine($"Hello {_userName}");
-            textBuilder.AppendLine("Looks like you have lost your password on Vue.Splash.");
-            textBuilder.AppendLine("Use the following token to reset your password.");
+            textBuilder.AppendLine("You are receiving this email to verify your email.");
+            textBuilder.AppendLine("Use the following token to prove your identity.");
             textBuilder.AppendLine($"Here is the token : {_token}");
-            textBuilder.AppendLine("If it was not you who started this process, ignore this email.");
             textBuilder.AppendLine("Thanks.");
             textBuilder.AppendLine("Vue.Splash");
             return textBuilder.ToString();

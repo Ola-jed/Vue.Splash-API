@@ -1,10 +1,15 @@
+using System.Text;
 using Backblaze_Client;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using Vue.Splash_API.Data.Context;
+using Vue.Splash_API.Models;
 using Vue.Splash_API.Services.Mail;
 
 namespace Vue.Splash_API.Extensions
@@ -45,6 +50,53 @@ namespace Vue.Splash_API.Extensions
             serviceCollection.AddDbContext<SplashContext>(opt => opt.UseNpgsql(builder.ConnectionString));
         }
 
+        public static void ConfigureIdentity(this IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedEmail = true)
+                .AddEntityFrameworkStores<SplashContext>()
+                .AddDefaultTokenProviders();
+        }
+
+        public static void ConfigureAuthentication(this IServiceCollection serviceCollection,
+            IConfiguration configuration)
+        {
+            serviceCollection.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.SaveToken = true;
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidAudience = configuration["JWT:ValidAudience"],
+                        ValidIssuer = configuration["JWT:ValidIssuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
+                    };
+                });
+        }
+
+        public static void ConfigureCors(this IServiceCollection serviceCollection,
+            string policyName)
+        {
+            serviceCollection.AddCors(options =>
+            {
+                options.AddPolicy(name: policyName,
+                    corsPolicyBuilder =>
+                    {
+                        corsPolicyBuilder
+                            .AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
+                    });
+            });
+        }
+
         public static void ConfigureSwagger(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSwaggerGen(c =>
@@ -71,5 +123,6 @@ namespace Vue.Splash_API.Extensions
                 c.AddSecurityRequirement(securityRequirement);
             });
         }
+
     }
 }

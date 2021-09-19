@@ -30,7 +30,7 @@ namespace Vue.Splash_API.Controllers
                 return NotFound();
             }
 
-            var token = await _userService.GenerateResetPasswordToken(null);
+            var token = await _userService.GenerateResetPasswordToken(user);
             await _mailService.SendEmailAsync(new ForgotPasswordMail(user.UserName,user.Email,token));
             return Ok();
         }

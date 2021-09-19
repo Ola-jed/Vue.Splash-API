@@ -31,6 +31,12 @@ namespace Vue.Splash_API.Services.Auth
             return user != null && await _userService.CheckPassword(user.UserName, loginDto.Password);
         }
 
+        public async Task<bool> IsEmailConfirmed(string identifier)
+        {
+            var usr = await _userService.FindUserByIdentifier(identifier);
+            return await _userService.IsEmailConfirmed(usr.Email);
+        }
+
         public async Task<(IdentityResult, ApplicationUser)> RegisterUser(RegisterDto registerDto)
         {
             var userExists = await _userService.FindUserByUserName(registerDto.Username);

@@ -8,6 +8,7 @@ namespace Vue.Splash_API.Services.Auth
 {
     public interface IAuthService
     {
+        Task<bool> IsEmailConfirmed(string identifier);
         Task<(IdentityResult,ApplicationUser)> RegisterUser(RegisterDto registerDto);
         Task<bool> ValidateUserCredentials(LoginDto loginDto);
         Task<JwtSecurityToken> GenerateJwt(LoginDto loginDto);
