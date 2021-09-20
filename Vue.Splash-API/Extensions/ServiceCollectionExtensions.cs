@@ -20,6 +20,8 @@ namespace Vue.Splash_API.Extensions
             IConfiguration configuration)
         {
             var cfg = configuration.GetSection("MailSettings");
+            cfg["Host"] = configuration["MailHost"];
+            cfg["Port"] = configuration["MailPort"];
             cfg["MailUser"] = configuration["MailUser"];
             cfg["MailPassword"] = configuration["MailPassword"];
             serviceCollection.Configure<MailSettings>(cfg);
