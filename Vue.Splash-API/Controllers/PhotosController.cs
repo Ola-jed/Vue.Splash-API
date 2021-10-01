@@ -35,6 +35,7 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> GetAll()
         {
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
@@ -43,6 +44,9 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpGet("{id:int}", Name = "Get")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Get(int id)
         {
             var photo = await _photoRepository.GetPhoto(id);
@@ -56,6 +60,9 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpGet("{id:int}/download")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DownloadPhoto(int id)
         {
             var photo = await _photoRepository.GetPhoto(id);
@@ -80,6 +87,8 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Post([FromForm] PhotoCreateDto photoCreateDto)
         {
             try
@@ -100,6 +109,9 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> UpdatePhoto(int id, PhotoUpdateDto photoUpdateDto)
         {
             var photo = await _photoRepository.GetPhoto(id);
@@ -120,6 +132,9 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeletePhoto(int id)
         {
             var photo = await _photoRepository.GetPhoto(id);

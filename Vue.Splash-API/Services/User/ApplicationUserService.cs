@@ -7,7 +7,7 @@ using Vue.Splash_API.Models;
 
 namespace Vue.Splash_API.Services.User
 {
-    public class ApplicationUserService: IApplicationUserService
+    public class ApplicationUserService : IApplicationUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -56,7 +56,7 @@ namespace Vue.Splash_API.Services.User
 
         public async Task<IdentityResult> CreateUser(ApplicationUser user, string password)
         {
-            return await _userManager.CreateAsync(user,password);
+            return await _userManager.CreateAsync(user, password);
         }
 
         public async Task<IdentityResult> UpdateUser(ApplicationUser initialValue, AccountUpdateDto updateDto)
@@ -66,9 +66,10 @@ namespace Vue.Splash_API.Services.User
             return await _userManager.UpdateAsync(initialValue);
         }
 
-        public async Task<IdentityResult> UpdatePassword(ApplicationUser user,string currentPassword,string newPassword)
+        public async Task<IdentityResult> UpdatePassword(ApplicationUser user, string currentPassword,
+            string newPassword)
         {
-            return await _userManager.ChangePasswordAsync(user,currentPassword,newPassword);
+            return await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
         }
 
         public async Task<IdentityResult> DeleteUser(ApplicationUser user)
@@ -93,7 +94,7 @@ namespace Vue.Splash_API.Services.User
             return await _userManager.GeneratePasswordResetTokenAsync(user);
         }
 
-        public async Task<IdentityResult> ResetUserPassword(ApplicationUser user,string token,string newPassword)
+        public async Task<IdentityResult> ResetUserPassword(ApplicationUser user, string token, string newPassword)
         {
             return await _userManager.ResetPasswordAsync(user, token, newPassword);
         }

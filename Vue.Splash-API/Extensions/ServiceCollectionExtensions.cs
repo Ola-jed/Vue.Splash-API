@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Backblaze_Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -54,7 +55,8 @@ namespace Vue.Splash_API.Extensions
 
         public static void ConfigureIdentity(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedEmail = true)
+            serviceCollection
+                .AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedEmail = true)
                 .AddEntityFrameworkStores<SplashContext>()
                 .AddDefaultTokenProviders();
         }
@@ -88,7 +90,7 @@ namespace Vue.Splash_API.Extensions
         {
             serviceCollection.AddCors(options =>
             {
-                options.AddPolicy(name: policyName,
+                options.AddPolicy(policyName,
                     corsPolicyBuilder =>
                     {
                         corsPolicyBuilder
@@ -103,7 +105,23 @@ namespace Vue.Splash_API.Extensions
         {
             serviceCollection.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Vue.Splash_API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Vue.Splash",
+                    Version = "v1",
+                    Description = "An api for an unsplash clone",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Olabissi Gbangboche",
+                        Email = "olabijed@gmail.com",
+                        Url = new Uri("https://github.com/Ola-jed")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Use under MIT",
+                        Url = new Uri("https://github.com/Ola-jed/Vue.Splash-API/blob/master/LICENSE")
+                    }
+                });
                 var securitySchema = new OpenApiSecurityScheme
                 {
                     Description = "Authorization header using the Bearer scheme. (\"Authorization: Bearer {token}\")",
@@ -125,6 +143,5 @@ namespace Vue.Splash_API.Extensions
                 c.AddSecurityRequirement(securityRequirement);
             });
         }
-
     }
 }

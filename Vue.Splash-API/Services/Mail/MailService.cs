@@ -6,7 +6,7 @@ using MimeKit;
 
 namespace Vue.Splash_API.Services.Mail
 {
-    public class MailService: IMailService
+    public class MailService : IMailService
     {
         private readonly MailSettings _settings;
 
@@ -20,8 +20,8 @@ namespace Vue.Splash_API.Services.Mail
             var email = mailable.Build();
             email.Sender = MailboxAddress.Parse(_settings.MailUser);
             using var smtp = new SmtpClient();
-            await smtp.ConnectAsync(_settings.Host,_settings.Port,SecureSocketOptions.StartTls);
-            await smtp.AuthenticateAsync(_settings.MailUser,_settings.MailPassword);
+            await smtp.ConnectAsync(_settings.Host, _settings.Port, SecureSocketOptions.StartTls);
+            await smtp.AuthenticateAsync(_settings.MailUser, _settings.MailPassword);
             await smtp.SendAsync(email);
             await smtp.DisconnectAsync(true);
         }

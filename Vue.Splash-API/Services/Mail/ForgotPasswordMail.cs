@@ -3,7 +3,7 @@ using MimeKit;
 
 namespace Vue.Splash_API.Services.Mail
 {
-    public class ForgotPasswordMail: IMailable
+    public class ForgotPasswordMail : IMailable
     {
         private readonly string _userName;
         private readonly string _destinationMail;
@@ -41,7 +41,8 @@ namespace Vue.Splash_API.Services.Mail
             htmlBuilder.Append("Looks like you have lost your password on Vue.Splash.<br/>");
             htmlBuilder.Append("Use the following token to reset your password.<br />");
             htmlBuilder.Append($"Here is the token : <strong>{_token}</strong><br />");
-            htmlBuilder.Append($"Or click on the following link <a href=\"http://localhost:8080/account/password-reset{_token}\">Reset password</a>.<br />");
+            htmlBuilder.Append(
+                $"Or click on the following link <a href=\"http://localhost:8080/account/password-reset{_token}\">Reset password</a>.<br />");
             htmlBuilder.Append("If it was not you who started this process, ignore this email.<br />");
             htmlBuilder.Append("Thanks. <br />");
             htmlBuilder.Append("<a href=\"http://localhost:8080\">Vue.Splash</a>");

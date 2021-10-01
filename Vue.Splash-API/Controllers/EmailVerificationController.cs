@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Vue.Splash_API.Dtos;
 using Vue.Splash_API.Services.Mail;
@@ -21,6 +22,7 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> SendVerificationMail(EmailDto emailDto)
         {
             var user = await _userService.FindUserByEmail(emailDto.Email);
@@ -30,10 +32,12 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpPost("verify")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> VerifyEmail(EmailVerificationDto emailVerificationDto)
         {
             var user = await _userService.FindUserByEmail(emailVerificationDto.Email);
-            var result = await _userService.VerifyEmail(user,emailVerificationDto.Token);
+            var result = await _userService.VerifyEmail(user, emailVerificationDto.Token);
             return result.Succeeded
                 ? Ok()
                 : BadRequest(new

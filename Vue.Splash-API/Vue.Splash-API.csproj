@@ -7,28 +7,27 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-        <PackageReference Include="Backblaze_Client" Version="1.0.0" />
-        <PackageReference Include="MailKit" Version="2.15.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
-        <PackageReference Include="MimeKit" Version="2.15.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.9" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1"/>
+        <PackageReference Include="Backblaze_Client" Version="1.0.0"/>
+        <PackageReference Include="MailKit" Version="2.15.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0"/>
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2"/>
+        <PackageReference Include="MimeKit" Version="2.15.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.9"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.9">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.12.2" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.2" />
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.12.2"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.2"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Images" />
-      <Folder Include="Migrations" />
+        <Folder Include="Images"/>
     </ItemGroup>
 
 </Project>

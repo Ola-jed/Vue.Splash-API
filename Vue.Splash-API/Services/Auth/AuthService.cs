@@ -14,7 +14,7 @@ using Vue.Splash_API.Services.User;
 
 namespace Vue.Splash_API.Services.Auth
 {
-    public class AuthService: IAuthService
+    public class AuthService : IAuthService
     {
         private readonly IApplicationUserService _userService;
         private readonly IConfiguration _configuration;
@@ -44,6 +44,7 @@ namespace Vue.Splash_API.Services.Auth
             {
                 return (null, null);
             }
+
             var user = new ApplicationUser
             {
                 Email = registerDto.Email,
@@ -57,7 +58,7 @@ namespace Vue.Splash_API.Services.Auth
 
         public async Task<JwtSecurityToken> GenerateJwt(LoginDto loginDto)
         {
-            if (! await ValidateUserCredentials(loginDto))
+            if (!await ValidateUserCredentials(loginDto))
             {
                 return null;
             }
@@ -72,8 +73,8 @@ namespace Vue.Splash_API.Services.Auth
             authClaims.AddRange(userRoles.Select(userRole => new Claim(ClaimTypes.Role, userRole)));
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
             return new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                audience:_configuration["JWT:ValidAudience"],
+                _configuration["JWT:ValidIssuer"],
+                _configuration["JWT:ValidAudience"],
                 expires: DateTime.Now.AddDays(30),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)

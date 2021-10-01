@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Vue.Splash_API.Dtos.Validation
 {
-    public class AllowedExtensionsAttribute: ValidationAttribute
+    public class AllowedExtensionsAttribute : ValidationAttribute
     {
         private readonly List<string> _extensions;
 
@@ -23,6 +23,7 @@ namespace Vue.Splash_API.Dtos.Validation
             {
                 return new ValidationResult("No file detected");
             }
+
             var extension = Path.GetExtension(file.FileName);
             return _extensions.Contains(extension.ToLower())
                 ? ValidationResult.Success
