@@ -82,7 +82,7 @@ namespace Vue.Splash_API.Controllers
         {
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
             var predicate = new Func<Photo, bool>(photo =>
-                photo.Label.Contains(searchDto.Search) && photo.ApplicationUserId == usr.Id);
+                photo.Label.Contains(searchDto.Search,StringComparison.OrdinalIgnoreCase) && photo.ApplicationUserId == usr.Id);
             return Ok(_mapper.Map<IEnumerable<PhotoReadDto>>(_photoRepository.Find(predicate)));
         }
 
