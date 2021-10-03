@@ -42,7 +42,7 @@ namespace Vue.Splash_API.Services.Mail
             htmlBuilder.Append("Use the following token to prove your identity.<br />");
             htmlBuilder.Append($"Here is the token : <strong>{_token}</strong><br />");
             htmlBuilder.Append(
-                $"Or click on the following link <a href=\"http://localhost:8080/account/verify/{_token}\">Verify email</a>.<br />");
+                $"Or click on the following link <a href=\"http://localhost:8080/account/verify/{_token}?email={_destinationMail}\">Verify email</a>.<br />");
             htmlBuilder.Append("Thanks. <br />");
             htmlBuilder.Append("<a href=\"http://localhost:8080\">Vue.Splash</a>");
             return htmlBuilder.ToString();
