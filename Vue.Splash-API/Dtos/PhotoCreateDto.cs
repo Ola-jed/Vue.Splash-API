@@ -11,7 +11,7 @@ namespace Vue.Splash_API.Dtos
 
         [Required]
         [MaxFileSize(5 * 1024 * 1024)]
-        [AllowedExtensions(".jpg,.jpeg,.png,.webp")]
+        [AllowedExtensions(".jpg,.jpeg,.png,.bmp")]
         public IFormFile Photo { get; init; }
     }
 }
