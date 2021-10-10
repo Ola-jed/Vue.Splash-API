@@ -10,7 +10,7 @@ using Vue.Splash_API.Data.Context;
 namespace Vue.Splash_API.Migrations
 {
     [DbContext(typeof(SplashContext))]
-    [Migration("20211001192647_InitialMigration")]
+    [Migration("20211010121130_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -240,8 +240,13 @@ namespace Vue.Splash_API.Migrations
 
                     b.Property<string>("Path")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("Thumbnail")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.HasKey("Id");
 

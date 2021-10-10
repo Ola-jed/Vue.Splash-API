@@ -160,7 +160,8 @@ namespace Vue.Splash_API.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Path = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Path = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Thumbnail = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     Label = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "text", nullable: false)
