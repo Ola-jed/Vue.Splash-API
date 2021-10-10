@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
@@ -8,11 +7,11 @@ namespace Vue.Splash_API.Dtos.Validation
 {
     public class AllowedExtensionsAttribute : ValidationAttribute
     {
-        private readonly List<string> _extensions;
+        private readonly string[] _extensions;
 
         public AllowedExtensionsAttribute(string extensions)
         {
-            _extensions = extensions.Split(",").ToList();
+            _extensions = extensions.Split(",").ToArray();
         }
 
         protected override ValidationResult IsValid(
@@ -32,7 +31,7 @@ namespace Vue.Splash_API.Dtos.Validation
 
         private string GetErrorMessage()
         {
-            return $"This extension is not allowed";
+            return $"This extension is not allowed, allowed extensions are : {string.Join(",", _extensions)}";
         }
     }
 }
