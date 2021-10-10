@@ -9,6 +9,7 @@ using Vue.Splash_API.Data.Repositories;
 using Vue.Splash_API.Dtos;
 using Vue.Splash_API.Models;
 using Vue.Splash_API.Services.Storage;
+using Vue.Splash_API.Services.Thumbnail;
 using Vue.Splash_API.Services.User;
 
 namespace Vue.Splash_API.Controllers
@@ -21,17 +22,20 @@ namespace Vue.Splash_API.Controllers
         private readonly IStorageService _storageService;
         private readonly IApplicationUserService _userService;
         private readonly IPhotoRepository _photoRepository;
+        private readonly IThumbnailService _thumbnailService;
         private readonly IMapper _mapper;
 
         public PhotosController(IStorageService storageService,
             IMapper mapper,
             IApplicationUserService userService,
-            IPhotoRepository photoRepository)
+            IPhotoRepository photoRepository,
+            IThumbnailService thumbnailService)
         {
             _storageService = storageService;
             _mapper = mapper;
             _userService = userService;
             _photoRepository = photoRepository;
+            _thumbnailService = thumbnailService;
         }
 
         [HttpGet]
@@ -98,6 +102,9 @@ namespace Vue.Splash_API.Controllers
                 var photo = _mapper.Map<Photo>(photoCreateDto);
                 photo.Path = path;
                 photo.ApplicationUserId = usr.Id;
+                var thumbnail = await _thumbnailService.ReduceQuality(photoCreateDto.Photo);
+                var thumbnailFile = await _storageService.Save(thumbnail);
+                photo.Thumbnail = thumbnailFile;
                 await _photoRepository.CreatePhoto(photo);
                 await _photoRepository.SaveChanges();
                 return CreatedAtRoute(nameof(Get), new { photo.Id }, _mapper.Map<PhotoReadDto>(photo));
@@ -149,6 +156,7 @@ namespace Vue.Splash_API.Controllers
                 return Forbid();
             }
 
+            await _storageService.Delete(photo.Thumbnail);
             await _storageService.Delete(photo.Path);
             _photoRepository.DeletePhoto(photo);
             return NoContent();
