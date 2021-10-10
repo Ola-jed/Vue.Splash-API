@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Vue.Splash_API.Data.Repositories;
 using Vue.Splash_API.Dtos;
 using Vue.Splash_API.Models;
+using Vue.Splash_API.Services.Paginator;
 using Vue.Splash_API.Services.Storage;
 using Vue.Splash_API.Services.Thumbnail;
 using Vue.Splash_API.Services.User;
@@ -40,11 +42,16 @@ namespace Vue.Splash_API.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> GetAll()
+        public async Task<IEnumerable<PhotoReadDto>> GetAll([FromQuery] int pageSize = 20, [FromQuery] int pageNumber = 1)
         {
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
-            var photos = _photoRepository.Find(p => p.ApplicationUserId == usr.Id);
-            return Ok(_mapper.Map<IEnumerable<PhotoReadDto>>(photos));
+            var paginator = new Paginator
+            {
+                PageSize = pageSize,
+                PageNumber = pageNumber
+            };
+            var photos = _photoRepository.Find(p => p.ApplicationUserId == usr.Id).Paginate(paginator);
+            return _mapper.Map<IEnumerable<PhotoReadDto>>(photos);
         }
 
         [HttpGet("{id:int}", Name = "Get")]
@@ -82,12 +89,12 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<ActionResult> Search([FromQuery] PhotoSearchDto searchDto)
+        public async Task<IEnumerable<PhotoReadDto>> Search([FromQuery] PhotoSearchDto searchDto)
         {
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
             var predicate = new Func<Photo, bool>(photo =>
                 photo.Label.Contains(searchDto.Search,StringComparison.OrdinalIgnoreCase) && photo.ApplicationUserId == usr.Id);
-            return Ok(_mapper.Map<IEnumerable<PhotoReadDto>>(_photoRepository.Find(predicate)));
+            return _mapper.Map<IEnumerable<PhotoReadDto>>(_photoRepository.Find(predicate));
         }
 
         [HttpPost]
