@@ -1,4 +1,3 @@
-using System.Linq;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Vue.Splash_API.Models;
