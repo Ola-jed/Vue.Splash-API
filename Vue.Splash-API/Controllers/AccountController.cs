@@ -28,6 +28,7 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> Get()
         {
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
@@ -35,6 +36,9 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Put(AccountUpdateDto accountUpdateDto)
         {
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
@@ -60,10 +64,13 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpPut("password")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> UpdatePassword(UpdatePasswordDto passwordDto)
         {
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
-            if (! await _userService.CheckPassword(usr.UserName, passwordDto.CurrentPassword))
+            if (!await _userService.CheckPassword(usr.UserName, passwordDto.CurrentPassword))
             {
                 return Unauthorized();
             }
@@ -78,6 +85,9 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Delete(PasswordDto passwordDto)
         {
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);

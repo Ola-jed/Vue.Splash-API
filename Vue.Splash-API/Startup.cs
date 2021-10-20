@@ -10,6 +10,7 @@ using Vue.Splash_API.Extensions;
 using Vue.Splash_API.Services.Auth;
 using Vue.Splash_API.Services.Mail;
 using Vue.Splash_API.Services.Storage;
+using Vue.Splash_API.Services.Thumbnail;
 using Vue.Splash_API.Services.User;
 
 namespace Vue.Splash_API
@@ -35,9 +36,10 @@ namespace Vue.Splash_API
             services.ConfigureMail(Configuration);
             services.ConfigureSwagger();
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IStorageService, BackblazeStorageService>();
+            services.AddScoped<IStorageService, LocalStorageService>();
             services.AddScoped<IApplicationUserService, ApplicationUserService>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
+            services.AddScoped<IThumbnailService, ThumbnailService>();
             services.AddTransient<IMailService, MailService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -60,7 +62,7 @@ namespace Vue.Splash_API
             app.UseCors(OriginsAllowed);
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }

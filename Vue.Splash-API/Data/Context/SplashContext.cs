@@ -1,11 +1,10 @@
-using System.Linq;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Vue.Splash_API.Models;
 
 namespace Vue.Splash_API.Data.Context
 {
-    public class SplashContext: IdentityDbContext<ApplicationUser>
+    public class SplashContext : IdentityDbContext<ApplicationUser>
     {
         public SplashContext(DbContextOptions<SplashContext> options) : base(options)
         {

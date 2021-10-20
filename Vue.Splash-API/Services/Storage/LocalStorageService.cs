@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Vue.Splash_API.Services.Storage
 {
-    public class LocalStorageService: IStorageService
+    public class LocalStorageService : IStorageService
     {
         private readonly IWebHostEnvironment _env;
 
@@ -24,6 +24,7 @@ namespace Vue.Splash_API.Services.Storage
             {
                 Directory.CreateDirectory(pathBuilt);
             }
+
             var path = Path.Combine(
                 Directory.GetCurrentDirectory(),
                 "Images",

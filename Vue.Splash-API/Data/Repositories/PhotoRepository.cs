@@ -8,7 +8,7 @@ using Vue.Splash_API.Models;
 
 namespace Vue.Splash_API.Data.Repositories
 {
-    public class PhotoRepository: IPhotoRepository
+    public class PhotoRepository : IPhotoRepository
     {
         private readonly SplashContext _context;
 
@@ -23,6 +23,7 @@ namespace Vue.Splash_API.Data.Repositories
             {
                 throw new ArgumentNullException(nameof(photo));
             }
+
             await _context.Photos.AddAsync(photo);
         }
 
@@ -51,6 +52,7 @@ namespace Vue.Splash_API.Data.Repositories
             {
                 throw new ArgumentNullException(nameof(photo));
             }
+
             _context.Photos.Remove(photo);
         }
 

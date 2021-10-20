@@ -3,7 +3,7 @@ using MimeKit;
 
 namespace Vue.Splash_API.Services.Mail
 {
-    public class EmailVerificationMail: IMailable
+    public class EmailVerificationMail : IMailable
     {
         private readonly string _userName;
         private readonly string _destinationMail;
@@ -41,7 +41,8 @@ namespace Vue.Splash_API.Services.Mail
             htmlBuilder.Append("You are receiving this email to verify your email.<br/>");
             htmlBuilder.Append("Use the following token to prove your identity.<br />");
             htmlBuilder.Append($"Here is the token : <strong>{_token}</strong><br />");
-            htmlBuilder.Append($"Or click on the following link <a href=\"http://localhost:8080/account/verify/{_token}\">Verify email</a>.<br />");
+            htmlBuilder.Append(
+                $"Or click on the following link <a href=\"http://localhost:8080/account/verify/{_token}?email={_destinationMail}\">Verify email</a>.<br />");
             htmlBuilder.Append("Thanks. <br />");
             htmlBuilder.Append("<a href=\"http://localhost:8080\">Vue.Splash</a>");
             return htmlBuilder.ToString();

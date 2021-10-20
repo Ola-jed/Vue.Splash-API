@@ -4,7 +4,7 @@ using Vue.Splash_API.Models;
 
 namespace Vue.Splash_API.Profiles
 {
-    public class PhotoProfile: Profile
+    public class PhotoProfile : Profile
     {
         public PhotoProfile()
         {

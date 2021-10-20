@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Vue.Splash_API.Dtos.Validation
 {
-    public class MaxFileSizeAttribute: ValidationAttribute
+    public class MaxFileSizeAttribute : ValidationAttribute
     {
         private readonly int _maxFileSize;
 
@@ -20,6 +20,7 @@ namespace Vue.Splash_API.Dtos.Validation
             {
                 return ValidationResult.Success;
             }
+
             return file.Length > _maxFileSize
                 ? new ValidationResult(GetErrorMessage())
                 : ValidationResult.Success;
@@ -27,7 +28,7 @@ namespace Vue.Splash_API.Dtos.Validation
 
         private string GetErrorMessage()
         {
-            return $"Maximum allowed file size is { _maxFileSize} bytes.";
+            return $"Maximum allowed file size is {_maxFileSize} bytes.";
         }
     }
 }

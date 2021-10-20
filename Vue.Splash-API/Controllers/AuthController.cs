@@ -19,6 +19,8 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             var (result, user) = await _authService.RegisterUser(registerDto);
@@ -38,6 +40,8 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Login(LoginDto model)
         {
             var token = await _authService.GenerateJwt(model);

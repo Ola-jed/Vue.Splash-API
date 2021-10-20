@@ -6,6 +6,7 @@ namespace Vue.Splash_API.Dtos
     {
         [Required(ErrorMessage = "Current Password is required")]
         public string CurrentPassword { get; init; }
+
         [Required(ErrorMessage = "New Password is required")]
         public string NewPassword { get; init; }
     }

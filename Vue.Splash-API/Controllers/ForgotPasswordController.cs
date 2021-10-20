@@ -22,6 +22,8 @@ namespace Vue.Splash_API.Controllers
         }
 
         [HttpPost("forgot")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> SendPasswordResetMail(ForgotPasswordDto forgotPasswordDto)
         {
             var user = await _userService.FindUserByEmail(forgotPasswordDto.Email);
@@ -31,11 +33,14 @@ namespace Vue.Splash_API.Controllers
             }
 
             var token = await _userService.GenerateResetPasswordToken(user);
-            await _mailService.SendEmailAsync(new ForgotPasswordMail(user.UserName,user.Email,token));
+            await _mailService.SendEmailAsync(new ForgotPasswordMail(user.UserName, user.Email, token));
             return Ok();
         }
 
         [HttpPost("reset")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> ResetUserPassword(PasswordResetDto passwordResetDto)
         {
             var user = await _userService.FindUserByEmail(passwordResetDto.Email);
