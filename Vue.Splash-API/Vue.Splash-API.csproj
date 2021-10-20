@@ -4,6 +4,7 @@
         <TargetFramework>net5.0</TargetFramework>
         <RootNamespace>Vue.Splash_API</RootNamespace>
         <UserSecretsId>44F42587-B501-4B6C-8A70-191A939CC28C</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
