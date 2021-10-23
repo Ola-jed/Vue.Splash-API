@@ -3,6 +3,7 @@ using MailKit.Security;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using Vue.Splash_API.Services.Mail.Mailable;
 
 namespace Vue.Splash_API.Services.Mail
 {

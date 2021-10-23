@@ -1,7 +1,7 @@
 using System.Text;
 using MimeKit;
 
-namespace Vue.Splash_API.Services.Mail
+namespace Vue.Splash_API.Services.Mail.Mailable
 {
     public class ForgotPasswordMail : IMailable
     {
