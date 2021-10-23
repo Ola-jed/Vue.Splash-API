@@ -28,8 +28,4 @@
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.2" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Images" />
-    </ItemGroup>
-
 </Project>
