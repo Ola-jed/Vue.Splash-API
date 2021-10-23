@@ -17,7 +17,7 @@ namespace Vue.Splash_API
 {
     public class Startup
     {
-        private readonly string OriginsAllowed = "_originsAllowed";
+        private const string OriginsAllowed = "_originsAllowed";
 
         public Startup(IConfiguration configuration)
         {
