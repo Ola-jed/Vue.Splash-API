@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -42,7 +41,8 @@ namespace Vue.Splash_API.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IEnumerable<PhotoReadDto>> GetAll([FromQuery] int pageSize = 20, [FromQuery] int pageNumber = 1)
+        public async Task<IEnumerable<PhotoReadDto>> GetAll([FromQuery] int pageSize = 20,
+            [FromQuery] int pageNumber = 1)
         {
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
             var paginator = new Paginator
@@ -50,7 +50,8 @@ namespace Vue.Splash_API.Controllers
                 PageSize = pageSize,
                 PageNumber = pageNumber
             };
-            var photos = _photoRepository.Find(p => p.ApplicationUserId == usr.Id).Paginate(paginator);
+            var photos = _photoRepository.Find(p => p.ApplicationUserId == usr.Id)
+                .Paginate(paginator);
             return _mapper.Map<IEnumerable<PhotoReadDto>>(photos);
         }
 
