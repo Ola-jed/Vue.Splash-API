@@ -11,7 +11,7 @@ namespace Vue.Splash_API.Dtos.Validation
 
         public AllowedExtensionsAttribute(string extensions)
         {
-            _extensions = extensions.Split(",").ToArray();
+            _extensions = extensions.Split(",");
         }
 
         protected override ValidationResult IsValid(
