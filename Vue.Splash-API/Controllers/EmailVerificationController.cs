@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Vue.Splash_API.Dtos;
 using Vue.Splash_API.Services.Mail;
+using Vue.Splash_API.Services.Mail.Mailable;
 using Vue.Splash_API.Services.User;
 
 namespace Vue.Splash_API.Controllers

@@ -13,10 +13,14 @@ namespace Vue.Splash_API.Data.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<ApplicationUser>()
-                .HasMany(a => a.Photos)
-                .WithOne()
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<ApplicationUser>(user =>
+            {
+                user.Ignore(u => u.NormalizedEmail)
+                    .Ignore(u => u.NormalizedUserName);
+                user.HasMany(a => a.Photos)
+                    .WithOne()
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
         }
 
         public DbSet<Photo> Photos { get; set; }

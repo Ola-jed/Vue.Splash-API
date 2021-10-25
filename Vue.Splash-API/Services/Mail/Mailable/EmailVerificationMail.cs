@@ -1,7 +1,7 @@
 using System.Text;
 using MimeKit;
 
-namespace Vue.Splash_API.Services.Mail
+namespace Vue.Splash_API.Services.Mail.Mailable
 {
     public class EmailVerificationMail : IMailable
     {
@@ -37,26 +37,25 @@ namespace Vue.Splash_API.Services.Mail
         private string BuildHtmlBody()
         {
             var htmlBuilder = new StringBuilder();
-            htmlBuilder.Append($"Hello {_userName} <br/>");
-            htmlBuilder.Append("You are receiving this email to verify your email.<br/>");
-            htmlBuilder.Append("Use the following token to prove your identity.<br />");
-            htmlBuilder.Append($"Here is the token : <strong>{_token}</strong><br />");
-            htmlBuilder.Append(
-                $"Or click on the following link <a href=\"http://localhost:8080/account/verify/{_token}?email={_destinationMail}\">Verify email</a>.<br />");
-            htmlBuilder.Append("Thanks. <br />");
-            htmlBuilder.Append("<a href=\"http://localhost:8080\">Vue.Splash</a>");
+            htmlBuilder.Append($"Hello {_userName} <br/>")
+                .Append("You are receiving this email to verify your email.<br/>")
+                .Append("Use the following token to prove your identity.<br />")
+                .Append($"Here is the token : <strong>{_token}</strong><br />")
+                .Append($"Or click on the following link <a href=\"http://localhost:8080/account/verify/{_token}?email={_destinationMail}\">Verify email</a>.<br />")
+                .Append("Thanks. <br />")
+                .Append("<a href=\"http://localhost:8080\">Vue.Splash</a>");
             return htmlBuilder.ToString();
         }
 
         private string BuildTextBody()
         {
             var textBuilder = new StringBuilder();
-            textBuilder.AppendLine($"Hello {_userName}");
-            textBuilder.AppendLine("You are receiving this email to verify your email.");
-            textBuilder.AppendLine("Use the following token to prove your identity.");
-            textBuilder.AppendLine($"Here is the token : {_token}");
-            textBuilder.AppendLine("Thanks.");
-            textBuilder.AppendLine("Vue.Splash");
+            textBuilder.AppendLine($"Hello {_userName}")
+                .AppendLine("You are receiving this email to verify your email.")
+                .AppendLine("Use the following token to prove your identity.")
+                .AppendLine($"Here is the token : {_token}")
+                .AppendLine("Thanks.")
+                .AppendLine("Vue.Splash");
             return textBuilder.ToString();
         }
     }
