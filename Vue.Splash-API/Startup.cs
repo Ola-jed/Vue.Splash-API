@@ -34,9 +34,10 @@ namespace Vue.Splash_API
             services.ConfigurePgsql(Configuration);
             services.ConfigureBackblaze(Configuration);
             services.ConfigureMail(Configuration);
+            services.ConfigureBlobStorage(Configuration);
             services.ConfigureSwagger();
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IStorageService, LocalStorageService>();
+            services.AddSingleton<IStorageService, BlobStorageService>();
             services.AddScoped<IApplicationUserService, ApplicationUserService>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<IThumbnailService, ThumbnailService>();

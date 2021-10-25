@@ -12,6 +12,7 @@ using Npgsql;
 using Vue.Splash_API.Data.Context;
 using Vue.Splash_API.Models;
 using Vue.Splash_API.Services.Mail;
+using Vue.Splash_API.Services.Storage;
 
 namespace Vue.Splash_API.Extensions
 {
@@ -26,6 +27,15 @@ namespace Vue.Splash_API.Extensions
             cfg["MailUser"] = configuration["MailUser"];
             cfg["MailPassword"] = configuration["MailPassword"];
             serviceCollection.Configure<MailSettings>(cfg);
+        }
+
+        public static void ConfigureBlobStorage(this IServiceCollection serviceCollection,
+            IConfiguration configuration)
+        {
+            var cfg = configuration.GetSection("BlobStorage");
+            cfg["AzureBlobKey"] = configuration["AzureBlobKey"];
+            cfg["ContainerName"] = configuration["ContainerName"];
+            serviceCollection.Configure<BlobStorageSettings>(cfg);
         }
 
         public static void ConfigureBackblaze(this IServiceCollection serviceCollection,

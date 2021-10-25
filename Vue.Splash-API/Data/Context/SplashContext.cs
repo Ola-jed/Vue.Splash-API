@@ -15,8 +15,6 @@ namespace Vue.Splash_API.Data.Context
             base.OnModelCreating(builder);
             builder.Entity<ApplicationUser>(user =>
             {
-                user.Ignore(u => u.NormalizedEmail)
-                    .Ignore(u => u.NormalizedUserName);
                 user.HasMany(a => a.Photos)
                     .WithOne()
                     .OnDelete(DeleteBehavior.Cascade);
