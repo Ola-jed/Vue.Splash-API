@@ -37,7 +37,7 @@ namespace Vue.Splash_API
             services.ConfigureBlobStorage(Configuration);
             services.ConfigureSwagger();
             services.AddScoped<IAuthService, AuthService>();
-            services.AddSingleton<IStorageService, BlobStorageService>();
+            services.AddSingleton<IStorageService, LocalStorageService>();
             services.AddScoped<IApplicationUserService, ApplicationUserService>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<IThumbnailService, ThumbnailService>();
@@ -59,6 +59,8 @@ namespace Vue.Splash_API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Vue.Splash_API v1"));
             }
+            Console.WriteLine(env.ContentRootPath);
+            Console.WriteLine(env.WebRootPath);
             app.UseRouting();
             app.UseCors(OriginsAllowed);
             app.UseAuthentication();

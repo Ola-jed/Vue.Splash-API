@@ -1,4 +1,5 @@
-using System.Text;
+using System.IO;
+using System.Threading.Tasks;
 using MimeKit;
 
 namespace Vue.Splash_API.Services.Mail.Mailable
@@ -18,47 +19,36 @@ namespace Vue.Splash_API.Services.Mail.Mailable
             _token = token;
         }
 
-        public MimeMessage Build()
+        public async Task<MimeMessage> Build()
         {
-            var email = new MimeMessage()
+            var email = new MimeMessage
             {
                 Subject = "Vue.Splash : Forgotten password",
                 To = { MailboxAddress.Parse(_destinationMail) }
             };
-            var builder = new BodyBuilder()
+            var builder = new BodyBuilder
             {
-                HtmlBody = BuildHtmlBody(),
-                TextBody = BuildTextBody()
+                HtmlBody = await GetHtmlBody(),
+                TextBody = await GetPlainTextBody()
             };
             email.Body = builder.ToMessageBody();
             return email;
         }
 
-        private string BuildHtmlBody()
+        public async Task<string> GetHtmlBody()
         {
-            var htmlBuilder = new StringBuilder();
-            htmlBuilder.Append($"Hello {_userName} <br/>")
-                .Append("Looks like you have lost your password on Vue.Splash.<br/>")
-                .Append("Use the following token to reset your password.<br />")
-                .Append($"Here is the token : <strong>{_token}</strong><br />")
-                .Append($"Or click on the following link <a href=\"http://localhost:8080/account/password-reset{_token}?email={_destinationMail}\">Reset password</a>.<br />")
-                .Append("If it was not you who started this process, ignore this email.<br />")
-                .Append("Thanks. <br />")
-                .Append("<a href=\"http://localhost:8080\">Vue.Splash</a>");
-            return htmlBuilder.ToString();
+            var htmlTemplateContent = await File.ReadAllTextAsync("Services/Mail/Mailable/Template/Html/ForgotPasswordMail.html");
+            return htmlTemplateContent.Replace("[[_userName]]", _userName)
+                .Replace("[[_token]]", _token)
+                .Replace("[[_destinationMail]]", _destinationMail);
         }
 
-        private string BuildTextBody()
+        public async Task<string> GetPlainTextBody()
         {
-            var textBuilder = new StringBuilder();
-            textBuilder.AppendLine($"Hello {_userName}")
-                .AppendLine("Looks like you have lost your password on Vue.Splash.")
-                .AppendLine("Use the following token to reset your password.")
-                .AppendLine($"Here is the token : {_token}")
-                .AppendLine("If it was not you who started this process, ignore this email.")
-                .AppendLine("Thanks.")
-                .AppendLine("Vue.Splash");
-            return textBuilder.ToString();
+            var textTemplateContent = await File.ReadAllTextAsync("Services/Mail/Mailable/Template/Text/ForgotPasswordMail.txt");
+            return textTemplateContent.Replace("[[_userName]]", _userName)
+                .Replace("[[_token]]", _token)
+                .Replace("[[_destinationMail]]", _destinationMail);
         }
     }
 }

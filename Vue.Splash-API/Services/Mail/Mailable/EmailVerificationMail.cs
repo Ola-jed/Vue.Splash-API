@@ -1,4 +1,5 @@
-using System.Text;
+using System.IO;
+using System.Threading.Tasks;
 using MimeKit;
 
 namespace Vue.Splash_API.Services.Mail.Mailable
@@ -18,45 +19,36 @@ namespace Vue.Splash_API.Services.Mail.Mailable
             _token = token;
         }
 
-        public MimeMessage Build()
+        public async Task<MimeMessage> Build()
         {
-            var email = new MimeMessage()
+            var email = new MimeMessage
             {
                 Subject = "Vue.Splash : Email verification",
                 To = { MailboxAddress.Parse(_destinationMail) }
             };
-            var builder = new BodyBuilder()
+            var builder = new BodyBuilder
             {
-                HtmlBody = BuildHtmlBody(),
-                TextBody = BuildTextBody()
+                HtmlBody = await GetHtmlBody(),
+                TextBody = await GetPlainTextBody()
             };
             email.Body = builder.ToMessageBody();
             return email;
         }
 
-        private string BuildHtmlBody()
+        public async Task<string> GetHtmlBody()
         {
-            var htmlBuilder = new StringBuilder();
-            htmlBuilder.Append($"Hello {_userName} <br/>")
-                .Append("You are receiving this email to verify your email.<br/>")
-                .Append("Use the following token to prove your identity.<br />")
-                .Append($"Here is the token : <strong>{_token}</strong><br />")
-                .Append($"Or click on the following link <a href=\"http://localhost:8080/account/verify/{_token}?email={_destinationMail}\">Verify email</a>.<br />")
-                .Append("Thanks. <br />")
-                .Append("<a href=\"http://localhost:8080\">Vue.Splash</a>");
-            return htmlBuilder.ToString();
+            var htmlTemplateContent = await File.ReadAllTextAsync("Services/Mail/Mailable/Template/Html/EmailVerificationMail.html");
+            return htmlTemplateContent.Replace("[[_userName]]", _userName)
+                .Replace("[[_token]]", _token)
+                .Replace("[[_destinationMail]]", _destinationMail);
         }
 
-        private string BuildTextBody()
+        public async Task<string> GetPlainTextBody()
         {
-            var textBuilder = new StringBuilder();
-            textBuilder.AppendLine($"Hello {_userName}")
-                .AppendLine("You are receiving this email to verify your email.")
-                .AppendLine("Use the following token to prove your identity.")
-                .AppendLine($"Here is the token : {_token}")
-                .AppendLine("Thanks.")
-                .AppendLine("Vue.Splash");
-            return textBuilder.ToString();
+            var textTemplateContent = await File.ReadAllTextAsync("Services/Mail/Mailable/Template/Text/EmailVerificationMail.txt");
+            return textTemplateContent.Replace("[[_userName]]", _userName)
+                .Replace("[[_token]]", _token)
+                .Replace("[[_destinationMail]]", _destinationMail);
         }
     }
 }
