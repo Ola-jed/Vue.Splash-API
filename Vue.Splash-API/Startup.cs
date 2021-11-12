@@ -59,8 +59,6 @@ namespace Vue.Splash_API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Vue.Splash_API v1"));
             }
-            Console.WriteLine(env.ContentRootPath);
-            Console.WriteLine(env.WebRootPath);
             app.UseRouting();
             app.UseCors(OriginsAllowed);
             app.UseAuthentication();
