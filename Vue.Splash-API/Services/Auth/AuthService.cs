@@ -75,7 +75,7 @@ namespace Vue.Splash_API.Services.Auth
             return new JwtSecurityToken(
                 _configuration["JWT:ValidIssuer"],
                 _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddDays(30),
+                expires: DateTime.Now.AddHours(8),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );

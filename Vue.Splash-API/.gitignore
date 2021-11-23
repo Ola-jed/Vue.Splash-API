@@ -383,12 +383,6 @@ test-results/
 *.dmg
 *.app
 
-# content below from: https://github.com/github/gitignore/blob/master/Global/macOS.gitignore
-# General
-.DS_Store
-.AppleDouble
-.LSOverride
-
 # Icon must end with two \r
 Icon
 

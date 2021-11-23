@@ -18,7 +18,7 @@ namespace Vue.Splash_API.Services.Mail
 
         public async Task SendEmailAsync(IMailable mailable)
         {
-            var email = mailable.Build();
+            var email = await mailable.Build();
             email.Sender = MailboxAddress.Parse(_settings.MailUser);
             using var smtp = new SmtpClient();
             await smtp.ConnectAsync(_settings.Host, _settings.Port, SecureSocketOptions.StartTls);

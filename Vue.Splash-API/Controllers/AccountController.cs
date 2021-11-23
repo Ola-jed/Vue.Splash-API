@@ -91,7 +91,7 @@ namespace Vue.Splash_API.Controllers
         public async Task<ActionResult> Delete(PasswordDto passwordDto)
         {
             var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
-            var loginDto = new LoginDto()
+            var loginDto = new LoginDto
             {
                 Identifier = usr.UserName,
                 Password = passwordDto.Password
