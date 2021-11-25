@@ -1,14 +1,14 @@
-Vue.Splash : Email verification
+Email verification
 
 Hello [[_userName]],
 
 You are receiving this mail to verify your email address.
 
-Use the following token to prove your identity : [[_token]].
+Use the following token to prove your identity : [[_token]]
 
 Or copy the following link into your browser
 
-http://localhost:8080/account/verify/[[_token]]?email=[[_destinationMail]]
+http://localhost:8080/account/verify?token=[[_token]]&email=[[_destinationMail]]
 
 Thanks.
 
