@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 using Vue.Splash_API.Models;
 
 namespace Vue.Splash_API.Data.Context
@@ -8,6 +9,7 @@ namespace Vue.Splash_API.Data.Context
     {
         public SplashContext(DbContextOptions<SplashContext> options) : base(options)
         {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

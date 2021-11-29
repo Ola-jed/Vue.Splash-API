@@ -24,9 +24,14 @@ namespace Vue.Splash_API.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> SendVerificationMail(EmailDto emailDto)
         {
             var user = await _userService.FindUserByEmail(emailDto.Email);
+            if(user == null)
+            {
+                return NotFound();
+            }
             var token = await _userService.GenerateEmailVerificationToken(user);
             await _mailService.SendEmailAsync(new EmailVerificationMail(user.UserName, user.Email, token));
             return NoContent();
