@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Vue.Splash_API.Services.Thumbnail
+namespace Vue.Splash_API.Services.Thumbnail;
+
+public interface IThumbnailService
 {
-    public interface IThumbnailService
-    {
-        Task<IFormFile> ReduceQuality(IFormFile baseFile);
-    }
+    Task<IFormFile> ReduceQuality(IFormFile baseFile);
 }

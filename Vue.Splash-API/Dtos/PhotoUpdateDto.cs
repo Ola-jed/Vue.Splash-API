@@ -1,10 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Vue.Splash_API.Dtos
+namespace Vue.Splash_API.Dtos;
+
+public record PhotoUpdateDto
 {
-    public record PhotoUpdateDto
-    {
-        [Required] [MaxLength(100)] public string Label { get; init; }
-        [Required] public string Description { get; init; }
-    }
+    [Required] [MaxLength(100)] public string Label { get; init; }
+    [Required] public string Description { get; init; }
 }

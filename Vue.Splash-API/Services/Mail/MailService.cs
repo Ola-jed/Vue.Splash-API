@@ -5,26 +5,25 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using Vue.Splash_API.Services.Mail.Mailable;
 
-namespace Vue.Splash_API.Services.Mail
+namespace Vue.Splash_API.Services.Mail;
+
+public class MailService : IMailService
 {
-    public class MailService : IMailService
+    private readonly MailSettings _settings;
+
+    public MailService(IOptions<MailSettings> settings)
     {
-        private readonly MailSettings _settings;
+        _settings = settings.Value;
+    }
 
-        public MailService(IOptions<MailSettings> settings)
-        {
-            _settings = settings.Value;
-        }
-
-        public async Task SendEmailAsync(IMailable mailable)
-        {
-            var email = await mailable.Build();
-            email.Sender = MailboxAddress.Parse(_settings.MailUser);
-            using var smtp = new SmtpClient();
-            await smtp.ConnectAsync(_settings.Host, _settings.Port, SecureSocketOptions.StartTls);
-            await smtp.AuthenticateAsync(_settings.MailUser, _settings.MailPassword);
-            await smtp.SendAsync(email);
-            await smtp.DisconnectAsync(true);
-        }
+    public async Task SendEmailAsync(IMailable mailable)
+    {
+        var email = await mailable.Build();
+        email.Sender = MailboxAddress.Parse(_settings.MailUser);
+        using var smtp = new SmtpClient();
+        await smtp.ConnectAsync(_settings.Host, _settings.Port, SecureSocketOptions.StartTls);
+        await smtp.AuthenticateAsync(_settings.MailUser, _settings.MailPassword);
+        await smtp.SendAsync(email);
+        await smtp.DisconnectAsync(true);
     }
 }
