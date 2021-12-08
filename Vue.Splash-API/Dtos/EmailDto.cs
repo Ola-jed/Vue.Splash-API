@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Vue.Splash_API.Dtos
+namespace Vue.Splash_API.Dtos;
+
+public record EmailDto
 {
-    public record EmailDto
-    {
-        [Required] [EmailAddress] public string Email { get; init; }
-    }
+    [Required] [EmailAddress] public string Email { get; init; }
 }

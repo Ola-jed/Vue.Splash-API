@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Vue.Splash_API.Dtos
+namespace Vue.Splash_API.Dtos;
+
+public record PhotoSearchDto
 {
-    public record PhotoSearchDto
-    {
-        [Required] public string Search { get; init; }
-    }
+    [Required] public string Search { get; init; }
 }

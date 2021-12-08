@@ -7,108 +7,107 @@ using Vue.Splash_API.Dtos;
 using Vue.Splash_API.Services.Auth;
 using Vue.Splash_API.Services.User;
 
-namespace Vue.Splash_API.Controllers
+namespace Vue.Splash_API.Controllers;
+
+[Authorize]
+[Route("api/[controller]")]
+[ApiController] 
+public class AccountController : ControllerBase
 {
-    [Authorize]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AccountController : ControllerBase
+    private readonly IApplicationUserService _userService;
+    private readonly IMapper _mapper;
+    private readonly IAuthService _authService;
+
+    public AccountController(IApplicationUserService userService,
+        IMapper mapper,
+        IAuthService authService)
     {
-        private readonly IApplicationUserService _userService;
-        private readonly IMapper _mapper;
-        private readonly IAuthService _authService;
+        _userService = userService;
+        _mapper = mapper;
+        _authService = authService;
+    }
 
-        public AccountController(IApplicationUserService userService,
-            IMapper mapper,
-            IAuthService authService)
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> Get()
+    {
+        var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
+        return Ok(_mapper.Map<UserReadDto>(usr));
+    }
+
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> Put(AccountUpdateDto accountUpdateDto)
+    {
+        var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
+        if (usr == null)
         {
-            _userService = userService;
-            _mapper = mapper;
-            _authService = authService;
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> Get()
+        var loginDto = new LoginDto { Identifier = usr.UserName, Password = accountUpdateDto.Password };
+        var validCredentials = await _authService.ValidateUserCredentials(loginDto);
+        if (!validCredentials)
         {
-            var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
-            return Ok(_mapper.Map<UserReadDto>(usr));
+            return Unauthorized();
         }
 
-        [HttpPut]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Put(AccountUpdateDto accountUpdateDto)
+        var res = await _userService.UpdateUser(usr, accountUpdateDto);
+        return res.Succeeded
+            ? NoContent()
+            : StatusCode(StatusCodes.Status500InternalServerError, new
+            {
+                res.Errors
+            });
+    }
+
+    [HttpPut("password")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> UpdatePassword(UpdatePasswordDto passwordDto)
+    {
+        var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
+        if (!await _userService.CheckPassword(usr.UserName, passwordDto.CurrentPassword))
         {
-            var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
-            if (usr == null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-
-            var loginDto = new LoginDto { Identifier = usr.UserName, Password = accountUpdateDto.Password };
-            var validCredentials = await _authService.ValidateUserCredentials(loginDto);
-            if (!validCredentials)
-            {
-                return Unauthorized();
-            }
-
-            var res = await _userService.UpdateUser(usr, accountUpdateDto);
-            return res.Succeeded
-                ? NoContent()
-                : StatusCode(StatusCodes.Status500InternalServerError, new
-                {
-                    res.Errors
-                });
+            return Unauthorized();
         }
 
-        [HttpPut("password")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> UpdatePassword(UpdatePasswordDto passwordDto)
-        {
-            var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
-            if (!await _userService.CheckPassword(usr.UserName, passwordDto.CurrentPassword))
+        var res = await _userService.UpdatePassword(usr, passwordDto.CurrentPassword, passwordDto.NewPassword);
+        return res.Succeeded
+            ? NoContent()
+            : StatusCode(StatusCodes.Status500InternalServerError, new
             {
-                return Unauthorized();
-            }
+                res.Errors
+            });
+    }
 
-            var res = await _userService.UpdatePassword(usr, passwordDto.CurrentPassword, passwordDto.NewPassword);
-            return res.Succeeded
-                ? NoContent()
-                : StatusCode(StatusCodes.Status500InternalServerError, new
-                {
-                    res.Errors
-                });
+    [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> Delete(PasswordDto passwordDto)
+    {
+        var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
+        var loginDto = new LoginDto
+        {
+            Identifier = usr.UserName,
+            Password = passwordDto.Password
+        };
+        var validCredentials = await _authService.ValidateUserCredentials(loginDto);
+        if (!validCredentials)
+        {
+            return Unauthorized();
         }
 
-        [HttpDelete]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Delete(PasswordDto passwordDto)
-        {
-            var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
-            var loginDto = new LoginDto
+        var res = await _userService.DeleteUser(usr);
+        return res.Succeeded
+            ? NoContent()
+            : StatusCode(StatusCodes.Status500InternalServerError, new
             {
-                Identifier = usr.UserName,
-                Password = passwordDto.Password
-            };
-            var validCredentials = await _authService.ValidateUserCredentials(loginDto);
-            if (!validCredentials)
-            {
-                return Unauthorized();
-            }
-
-            var res = await _userService.DeleteUser(usr);
-            return res.Succeeded
-                ? NoContent()
-                : StatusCode(StatusCodes.Status500InternalServerError, new
-                {
-                    res.Errors
-                });
-        }
+                res.Errors
+            });
     }
 }

@@ -6,59 +6,58 @@ using Microsoft.EntityFrameworkCore;
 using Vue.Splash_API.Data.Context;
 using Vue.Splash_API.Models;
 
-namespace Vue.Splash_API.Data.Repositories
+namespace Vue.Splash_API.Data.Repositories;
+
+public class PhotoRepository : IPhotoRepository
 {
-    public class PhotoRepository : IPhotoRepository
+    private readonly SplashContext _context;
+
+    public PhotoRepository(SplashContext context)
     {
-        private readonly SplashContext _context;
+        _context = context;
+    }
 
-        public PhotoRepository(SplashContext context)
+    public async Task CreatePhoto(Photo photo)
+    {
+        if (photo == null)
         {
-            _context = context;
+            throw new ArgumentNullException(nameof(photo));
         }
 
-        public async Task CreatePhoto(Photo photo)
-        {
-            if (photo == null)
-            {
-                throw new ArgumentNullException(nameof(photo));
-            }
+        await _context.Photos.AddAsync(photo);
+    }
 
-            await _context.Photos.AddAsync(photo);
+    public async Task<Photo> GetPhoto(int id)
+    {
+        return await _context.Photos.FirstOrDefaultAsync(p => p.Id == id);
+    }
+
+    public IEnumerable<Photo> Find(Func<Photo, bool> func)
+    {
+        return _context
+            .Photos
+            .AsNoTracking()
+            .AsEnumerable()
+            .Where(func);
+    }
+
+    public void UpdatePhoto(int id)
+    {
+        // Euh not yet
+    }
+
+    public void DeletePhoto(Photo photo)
+    {
+        if (photo == null)
+        {
+            throw new ArgumentNullException(nameof(photo));
         }
 
-        public async Task<Photo> GetPhoto(int id)
-        {
-            return await _context.Photos.FirstOrDefaultAsync(p => p.Id == id);
-        }
+        _context.Photos.Remove(photo);
+    }
 
-        public IEnumerable<Photo> Find(Func<Photo, bool> func)
-        {
-            return _context
-                .Photos
-                .AsNoTracking()
-                .AsEnumerable()
-                .Where(func);
-        }
-
-        public void UpdatePhoto(int id)
-        {
-            // Euh not yet
-        }
-
-        public void DeletePhoto(Photo photo)
-        {
-            if (photo == null)
-            {
-                throw new ArgumentNullException(nameof(photo));
-            }
-
-            _context.Photos.Remove(photo);
-        }
-
-        public async Task SaveChanges()
-        {
-            await _context.SaveChangesAsync();
-        }
+    public async Task SaveChanges()
+    {
+        await _context.SaveChangesAsync();
     }
 }

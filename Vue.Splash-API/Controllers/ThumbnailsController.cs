@@ -6,41 +6,40 @@ using Vue.Splash_API.Data.Repositories;
 using Vue.Splash_API.Services.Storage;
 using Vue.Splash_API.Services.User;
 
-namespace Vue.Splash_API.Controllers
+namespace Vue.Splash_API.Controllers;
+
+[Authorize]
+[ApiController]
+public class ThumbnailsController: ControllerBase
 {
-    [Authorize]
-    [ApiController]
-    public class ThumbnailsController: ControllerBase
+    private readonly IStorageService _storageService;
+    private readonly IApplicationUserService _userService;
+    private readonly IPhotoRepository _photoRepository;
+
+    public ThumbnailsController(IStorageService storageService,
+        IApplicationUserService userService,
+        IPhotoRepository photoRepository)
     {
-        private readonly IStorageService _storageService;
-        private readonly IApplicationUserService _userService;
-        private readonly IPhotoRepository _photoRepository;
+        _storageService = storageService;
+        _userService = userService;
+        _photoRepository = photoRepository;
+    }
 
-        public ThumbnailsController(IStorageService storageService,
-            IApplicationUserService userService,
-            IPhotoRepository photoRepository)
+    [HttpGet("Photos/{photoId:int}/Thumbnail")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> DownloadThumbnail(int photoId)
+    {
+        var photo = await _photoRepository.GetPhoto(photoId);
+        if (photo == null)
         {
-            _storageService = storageService;
-            _userService = userService;
-            _photoRepository = photoRepository;
+            return NotFound();
         }
 
-        [HttpGet("Photos/{photoId:int}/Thumbnail")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DownloadThumbnail(int photoId)
-        {
-            var photo = await _photoRepository.GetPhoto(photoId);
-            if (photo == null)
-            {
-                return NotFound();
-            }
-
-            var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
-            return photo.ApplicationUserId != usr.Id
-                ? Forbid()
-                : File(await _storageService.GetStream(photo.Thumbnail), "image/*");
-        }
+        var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name);
+        return photo.ApplicationUserId != usr.Id
+            ? Forbid()
+            : File(await _storageService.GetStream(photo.Thumbnail), "image/*");
     }
 }
