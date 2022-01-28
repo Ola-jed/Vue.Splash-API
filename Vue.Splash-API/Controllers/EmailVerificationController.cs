@@ -6,50 +6,56 @@ using Vue.Splash_API.Services.Mail;
 using Vue.Splash_API.Services.Mail.Mailable;
 using Vue.Splash_API.Services.User;
 
-namespace Vue.Splash_API.Controllers
+namespace Vue.Splash_API.Controllers;
+
+[Route("api/email")]
+[ApiController]
+public class EmailVerificationController : ControllerBase
 {
-    [Route("api/email")]
-    [ApiController]
-    public class EmailVerificationController : ControllerBase
+    private readonly IApplicationUserService _userService;
+    private readonly IMailService _mailService;
+
+    public EmailVerificationController(IApplicationUserService userService,
+        IMailService mailService)
     {
-        private readonly IApplicationUserService _userService;
-        private readonly IMailService _mailService;
+        _userService = userService;
+        _mailService = mailService;
+    }
 
-        public EmailVerificationController(IApplicationUserService userService,
-            IMailService mailService)
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> SendVerificationMail(EmailDto emailDto)
+    {
+        var user = await _userService.FindUserByEmail(emailDto.Email);
+        if (user == null)
         {
-            _userService = userService;
-            _mailService = mailService;
+            return NotFound();
         }
 
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> SendVerificationMail(EmailDto emailDto)
+        var token = await _userService.GenerateEmailVerificationToken(user);
+        await _mailService.SendEmailAsync(new EmailVerificationMail(user.UserName, user.Email, token));
+        return NoContent();
+    }
+
+    [HttpPost("verify")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> VerifyEmail(EmailVerificationDto emailVerificationDto)
+    {
+        var user = await _userService.FindUserByEmail(emailVerificationDto.Email);
+        if (user == null)
         {
-            var user = await _userService.FindUserByEmail(emailDto.Email);
-            if(user == null)
+            return NotFound();
+        }
+
+        var result = await _userService.VerifyEmail(user, emailVerificationDto.Token);
+        return result.Succeeded
+            ? Ok()
+            : BadRequest(new
             {
-                return NotFound();
-            }
-            var token = await _userService.GenerateEmailVerificationToken(user);
-            await _mailService.SendEmailAsync(new EmailVerificationMail(user.UserName, user.Email, token));
-            return NoContent();
-        }
-
-        [HttpPost("verify")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> VerifyEmail(EmailVerificationDto emailVerificationDto)
-        {
-            var user = await _userService.FindUserByEmail(emailVerificationDto.Email);
-            var result = await _userService.VerifyEmail(user, emailVerificationDto.Token);
-            return result.Succeeded
-                ? Ok()
-                : BadRequest(new
-                {
-                    result.Errors
-                });
-        }
+                result.Errors
+            });
     }
 }

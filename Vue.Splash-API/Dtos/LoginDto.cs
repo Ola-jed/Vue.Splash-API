@@ -1,13 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Vue.Splash_API.Dtos
-{
-    public record LoginDto
-    {
-        [Required(ErrorMessage = "The identifier is required")]
-        public string Identifier { get; init; }
+namespace Vue.Splash_API.Dtos;
 
-        [Required(ErrorMessage = "Password is required")]
-        public string Password { get; init; }
-    }
-}
+public record LoginDto([Required] string Identifier, [Required] string Password);
