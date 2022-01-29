@@ -1,8 +1,8 @@
 name: Create linux and windows self contained releases
 
 on:
-  push:
-    branches: [ master ]
+  release:
+    types: [published]
 
 jobs:
   release:
