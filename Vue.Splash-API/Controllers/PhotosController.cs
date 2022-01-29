@@ -75,7 +75,7 @@ public class PhotosController : ControllerBase
     {
         var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name!);
         var urlPaginationParameter = new UrlPaginationParameter(searchDto.PageSize, searchDto.PageNumber,
-            HttpContext.Request.GetEncodedUrl().Split('?')[0]);
+            HttpContext.Request.GetEncodedUrl().Split('?')[0] + $"?Search = {searchDto.Search}");
         return await _photosService.Find(
             p => EF.Functions.Like(p.Label, $"%{searchDto.Search}%") && p.ApplicationUserId == usr!.Id,
             urlPaginationParameter);

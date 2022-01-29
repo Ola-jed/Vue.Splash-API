@@ -10,6 +10,7 @@ using Vue.Splash_API.Services.Thumbnail;
 using Vue.Splash_API.Services.User;
 using Microsoft.AspNetCore.HttpLogging;
 using Vue.Splash_API.Services.Photos;
+using Vue.Splash_API.Services.UserPhotos;
 
 const string originsAllowed = "_originsAllowed";
 
@@ -27,7 +28,8 @@ builder.Services.AddSingleton<IStorageService, LocalStorageService>();
 builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
 builder.Services.AddScoped<IPhotosService, PhotosService>();
 builder.Services.AddScoped<IThumbnailService, ThumbnailService>();
-builder.Services.AddTransient<IMailService, MailService>();
+builder.Services.AddScoped<IUserPhotosService, UserPhotosService>();
+builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddMapper();
 builder.Services.ConfigureIdentity();
