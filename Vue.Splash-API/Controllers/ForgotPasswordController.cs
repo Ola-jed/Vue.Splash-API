@@ -10,7 +10,7 @@ using Vue.Splash_API.Services.User;
 namespace Vue.Splash_API.Controllers;
 
 [ApiController]
-[Route("api/password")]
+[Route("api/Password")]
 public class ForgotPasswordController : ControllerBase
 {
     private readonly IApplicationUserService _userService;
@@ -26,7 +26,7 @@ public class ForgotPasswordController : ControllerBase
         _frontUrl = configuration["FrontUrl"];
     }
 
-    [HttpPost("forgot")]
+    [HttpPost("Forgot")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> SendPasswordResetMail(ForgotPasswordDto forgotPasswordDto)
@@ -42,7 +42,7 @@ public class ForgotPasswordController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("reset")]
+    [HttpPost("Reset")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
