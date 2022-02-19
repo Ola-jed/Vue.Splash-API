@@ -9,14 +9,17 @@ public class ForgotPasswordMail : IMailable
     private readonly string _userName;
     private readonly string _destinationMail;
     private readonly string _token;
+    private readonly string _frontUrl;
 
     public ForgotPasswordMail(string userName,
         string destinationMail,
-        string token)
+        string token,
+        string frontUrl)
     {
         _userName = userName;
         _destinationMail = destinationMail;
         _token = token;
+        _frontUrl = frontUrl;
     }
 
     public async Task<MimeMessage> Build()
@@ -37,19 +40,21 @@ public class ForgotPasswordMail : IMailable
 
     public async Task<string> GetHtmlBody()
     {
-        var htmlTemplateContent =
-            await File.ReadAllTextAsync("Services/Mail/Mailable/Template/Html/ForgotPasswordMail.html");
-        return htmlTemplateContent.Replace("[[_userName]]", _userName)
+        return await Task.Run(() => MailTemplates
+            .PasswordResetHtml
+            .Replace("[[_userName]]", _userName)
             .Replace("[[_token]]", _token)
-            .Replace("[[_destinationMail]]", _destinationMail);
+            .Replace("[[_destinationMail]]", _destinationMail)
+            .Replace("[[_frontUrl]]", _frontUrl));
     }
 
     public async Task<string> GetPlainTextBody()
     {
-        var textTemplateContent =
-            await File.ReadAllTextAsync("Services/Mail/Mailable/Template/Text/ForgotPasswordMail.txt");
-        return textTemplateContent.Replace("[[_userName]]", _userName)
+        return await Task.Run(() => MailTemplates
+            .PasswordResetText
+            .Replace("[[_userName]]", _userName)
             .Replace("[[_token]]", _token)
-            .Replace("[[_destinationMail]]", _destinationMail);
+            .Replace("[[_destinationMail]]", _destinationMail)
+            .Replace("[[_frontUrl]]", _frontUrl));
     }
 }

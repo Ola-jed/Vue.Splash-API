@@ -59,8 +59,10 @@ public static class ServiceCollectionExtensions
         var builder = new NpgsqlConnectionStringBuilder
         {
             ConnectionString = configuration.GetConnectionString("DefaultConnection"),
-            Password = configuration["Password"],
-            Username = configuration["UserId"]
+            Database = configuration["PgDbName"] ?? "splash",
+            Host = configuration["PgHost"] ?? "127.0.0.1",
+            Password = configuration["PgPassword"],
+            Username = configuration["PgUserId"]
         };
         serviceCollection.AddDbContext<SplashContext>(opt => opt.UseNpgsql(builder.ConnectionString));
     }
@@ -88,10 +90,8 @@ public static class ServiceCollectionExtensions
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidAudience = configuration["JWT:ValidAudience"],
-                    ValidIssuer = configuration["JWT:ValidIssuer"],
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
                 };
             });

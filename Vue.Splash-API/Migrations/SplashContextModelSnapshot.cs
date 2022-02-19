@@ -233,6 +233,9 @@ namespace Vue.Splash_API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");

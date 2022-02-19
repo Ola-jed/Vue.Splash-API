@@ -12,8 +12,8 @@ using Vue.Splash_API.Data;
 namespace Vue.Splash_API.Migrations
 {
     [DbContext(typeof(SplashContext))]
-    [Migration("20211129173027_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20220218210717_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -234,6 +234,9 @@ namespace Vue.Splash_API.Migrations
                     b.Property<string>("ApplicationUserId")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()

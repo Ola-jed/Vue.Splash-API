@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Vue.Splash_API.Dtos;
 using Vue.Splash_API.Services.Mail;
 using Vue.Splash_API.Services.Mail.Mailable;
@@ -14,12 +15,15 @@ public class ForgotPasswordController : ControllerBase
 {
     private readonly IApplicationUserService _userService;
     private readonly IMailService _mailService;
+    private readonly string _frontUrl;
 
     public ForgotPasswordController(IApplicationUserService userService,
-        IMailService mailService)
+        IMailService mailService,
+        IConfiguration configuration)
     {
         _userService = userService;
         _mailService = mailService;
+        _frontUrl = configuration["FrontUrl"];
     }
 
     [HttpPost("forgot")]
@@ -34,7 +38,7 @@ public class ForgotPasswordController : ControllerBase
         }
 
         var token = await _userService.GenerateResetPasswordToken(user);
-        await _mailService.SendEmailAsync(new ForgotPasswordMail(user.UserName, user.Email, token));
+        await _mailService.SendEmailAsync(new ForgotPasswordMail(user.UserName, user.Email, token, _frontUrl));
         return Ok();
     }
 

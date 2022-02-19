@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Vue.Splash_API.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -166,6 +166,7 @@ namespace Vue.Splash_API.Migrations
                     Thumbnail = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     Label = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
