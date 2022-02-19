@@ -9,7 +9,7 @@ using Vue.Splash_API.Services.User;
 
 namespace Vue.Splash_API.Controllers;
 
-[Route("api/email")]
+[Route("api/Email")]
 [ApiController]
 public class EmailVerificationController : ControllerBase
 {
@@ -42,7 +42,7 @@ public class EmailVerificationController : ControllerBase
         return NoContent();
     }
 
-    [HttpPost("verify")]
+    [HttpPost("Verify")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

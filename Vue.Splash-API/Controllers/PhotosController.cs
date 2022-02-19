@@ -60,7 +60,7 @@ public class PhotosController : ControllerBase
         return photo == null ? NotFound() : photo;
     }
 
-    [HttpGet("{id:int}/download")]
+    [HttpGet("{id:int}/Download")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> DownloadPhoto(int id)
@@ -70,7 +70,7 @@ public class PhotosController : ControllerBase
         return photoPath == null ? NotFound() : File(await _storageService.GetStream(photoPath), "image/*");
     }
 
-    [HttpGet("search")]
+    [HttpGet("Search")]
     public async Task<UrlPage<PhotoReadDto>> Search([FromQuery] PhotoSearchDto searchDto)
     {
         var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name!);

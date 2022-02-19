@@ -18,7 +18,7 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-    [HttpPost("register")]
+    [HttpPost("Register")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Register(RegisterDto registerDto)
@@ -39,15 +39,16 @@ public class AuthController : ControllerBase
             : NoContent();
     }
 
-    [HttpPost("login")]
+    [HttpPost("Login")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<TokenDto>> Login(LoginDto model)
     {
         var token = await _authService.GenerateJwt(model);
         if (token == null)
         {
-            return BadRequest();
+            return Unauthorized();
         }
 
         if (!await _authService.IsEmailConfirmed(model.Identifier))
