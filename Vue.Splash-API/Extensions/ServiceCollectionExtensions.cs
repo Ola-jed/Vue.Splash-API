@@ -3,6 +3,7 @@ using System.Text;
 using AutoMapper;
 using Backblaze_Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,8 +14,13 @@ using Npgsql;
 using Vue.Splash_API.Data;
 using Vue.Splash_API.Models;
 using Vue.Splash_API.Profiles;
+using Vue.Splash_API.Services.Auth;
 using Vue.Splash_API.Services.Mail;
+using Vue.Splash_API.Services.Photos;
 using Vue.Splash_API.Services.Storage;
+using Vue.Splash_API.Services.Thumbnail;
+using Vue.Splash_API.Services.User;
+using Vue.Splash_API.Services.UserPhotos;
 
 namespace Vue.Splash_API.Extensions;
 
@@ -164,5 +170,17 @@ public static class ServiceCollectionExtensions
             u.AddProfile<UserProfile>();
         });
         serviceCollection.AddSingleton(config.CreateMapper());
+    }
+
+    public static void AddServices(this IServiceCollection serviceCollection)
+    {
+        serviceCollection.AddScoped<IAuthService, AuthService>();
+        serviceCollection.AddSingleton<IStorageService, BackblazeStorageService>();
+        serviceCollection.AddScoped<IApplicationUserService, ApplicationUserService>();
+        serviceCollection.AddScoped<IPhotosService, PhotosService>();
+        serviceCollection.AddScoped<IThumbnailService, ThumbnailService>();
+        serviceCollection.AddScoped<IUserPhotosService, UserPhotosService>();
+        serviceCollection.AddScoped<IMailService, MailService>();
+        serviceCollection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }
 }
