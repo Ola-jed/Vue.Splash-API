@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Vue.Splash_API.Dtos;
 using Vue.Splash_API.Services.Auth;
+using Vue.Splash_API.Services.EmailVerification;
 
 namespace Vue.Splash_API.Controllers;
 
@@ -12,10 +13,13 @@ namespace Vue.Splash_API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
-
-    public AuthController(IAuthService authService)
+    private readonly IEmailVerificationService _emailVerificationService;
+    
+    public AuthController(IAuthService authService,
+        IEmailVerificationService emailVerificationService)
     {
         _authService = authService;
+        _emailVerificationService = emailVerificationService;
     }
 
     [HttpPost("Register")]
@@ -23,20 +27,17 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Register(RegisterDto registerDto)
     {
-        var (result, user) = await _authService.RegisterUser(registerDto);
-        if (result == null || user == null)
+        var user = await _authService.RegisterUser(registerDto);
+        if (user == null)
         {
             return StatusCode(StatusCodes.Status500InternalServerError,
-                new { Status = "Error", Message = "User already exists!" });
-        }
-
-        return !result.Succeeded
-            ? StatusCode(StatusCodes.Status500InternalServerError,
                 new
                 {
-                    result.Errors
-                })
-            : NoContent();
+                    Status = "Error",
+                    Message = "User already exists"
+                });
+        }
+        return NoContent();
     }
 
     [HttpPost("Login")]
@@ -51,7 +52,7 @@ public class AuthController : ControllerBase
             return Unauthorized();
         }
 
-        if (!await _authService.IsEmailConfirmed(model.Identifier))
+        if (!await _emailVerificationService.IsEmailConfirmed(model.Identifier))
         {
             return BadRequest(new
             {

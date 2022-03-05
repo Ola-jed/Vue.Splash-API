@@ -1,19 +1,11 @@
 using System;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vue.Splash_API.Extensions;
-using Vue.Splash_API.Services.Auth;
-using Vue.Splash_API.Services.Mail;
-using Vue.Splash_API.Services.Storage;
-using Vue.Splash_API.Services.Thumbnail;
-using Vue.Splash_API.Services.User;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Vue.Splash_API.Services.Photos;
-using Vue.Splash_API.Services.UserPhotos;
 
 const string originsAllowed = "_originsAllowed";
 
@@ -33,16 +25,8 @@ builder.Services.ConfigureBackblaze(configuration);
 builder.Services.ConfigureMail(configuration);
 builder.Services.ConfigureBlobStorage(configuration);
 builder.Services.ConfigureSwagger();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddSingleton<IStorageService, BackblazeStorageService>();
-builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
-builder.Services.AddScoped<IPhotosService, PhotosService>();
-builder.Services.AddScoped<IThumbnailService, ThumbnailService>();
-builder.Services.AddScoped<IUserPhotosService, UserPhotosService>();
-builder.Services.AddScoped<IMailService, MailService>();
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddServices();
 builder.Services.AddMapper();
-builder.Services.ConfigureIdentity();
 builder.Services.AddMemoryCache();
 builder.Services.ConfigureCors(originsAllowed);
 builder.Services.ConfigureAuthentication(configuration);

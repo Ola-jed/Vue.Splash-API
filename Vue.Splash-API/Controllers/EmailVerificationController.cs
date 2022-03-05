@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Vue.Splash_API.Dtos;
+using Vue.Splash_API.Services.EmailVerification;
 using Vue.Splash_API.Services.Mail;
 using Vue.Splash_API.Services.Mail.Mailable;
 using Vue.Splash_API.Services.User;
@@ -15,14 +16,16 @@ public class EmailVerificationController : ControllerBase
 {
     private readonly IApplicationUserService _userService;
     private readonly IMailService _mailService;
+    private readonly IEmailVerificationService _emailVerificationService;
     private readonly string _frontUrl;
 
     public EmailVerificationController(IApplicationUserService userService,
         IMailService mailService,
-        IConfiguration configuration)
+        IConfiguration configuration, IEmailVerificationService emailVerificationService)
     {
         _userService = userService;
         _mailService = mailService;
+        _emailVerificationService = emailVerificationService;
         _frontUrl = configuration["FrontUrl"];
     }
 
@@ -37,7 +40,7 @@ public class EmailVerificationController : ControllerBase
             return NotFound();
         }
 
-        var token = await _userService.GenerateEmailVerificationToken(user);
+        var token = await _emailVerificationService.GenerateEmailVerificationToken(user);
         await _mailService.SendEmailAsync(new EmailVerificationMail(user.UserName, user.Email, token, _frontUrl));
         return NoContent();
     }
@@ -54,12 +57,12 @@ public class EmailVerificationController : ControllerBase
             return NotFound();
         }
 
-        var result = await _userService.VerifyEmail(user, emailVerificationDto.Token);
-        return result.Succeeded
+        var result = await _emailVerificationService.VerifyEmail(user, emailVerificationDto.Token);
+        return result
             ? Ok()
             : BadRequest(new
             {
-                result.Errors
+                Message = "Email verification failed" 
             });
     }
 }

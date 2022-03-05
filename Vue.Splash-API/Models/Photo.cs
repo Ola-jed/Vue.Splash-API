@@ -4,34 +4,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vue.Splash_API.Models;
 
-public class Photo
+public class Photo : Model
 {
-    public Photo()
-    {
-        CreatedAt = DateTime.Now;
-    }
-
-    [Key]
-    public int Id { get; set; }
+    [Required]
+    [MaxLength(150)]
+    public string Path { get; set; } = null!;
 
     [Required]
     [MaxLength(150)]
-    public string Path { get; set; } = string.Empty;
-
-    [Required]
-    [MaxLength(150)]
-    public string Thumbnail { get; set; } = string.Empty;
+    public string Thumbnail { get; set; } = null!;
 
     [Required]
     [MaxLength(100)]
-    public string Label { get; set; } = string.Empty;
+    public string Label { get; set; } = null!;
 
     [Required]
     [Column(TypeName = "text")]
-    public string Description { get; set; } = string.Empty;
-
-    public DateTime CreatedAt { get; set; }
+    public string Description { get; set; } = null!;
 
     [Required]
-    public string ApplicationUserId { get; set; } = string.Empty;
+    [ForeignKey(nameof(ApplicationUser))]
+    public int ApplicationUserId { get; set; }
 }

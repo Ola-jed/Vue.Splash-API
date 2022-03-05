@@ -4,9 +4,9 @@ using Vue.Splash_API.Models;
 
 namespace Vue.Splash_API.Profiles;
 
-public class UserProfile : Profile
+public class ApplicationUserProfile : Profile
 {
-    public UserProfile()
+    public ApplicationUserProfile()
     {
         CreateMap<ApplicationUser, UserReadDto>();
     }

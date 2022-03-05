@@ -10,7 +10,7 @@ public static class QueryableExtensions
     private static readonly MapperConfiguration Config = new(u =>
     {
         u.AddProfile<PhotoProfile>();
-        u.AddProfile<UserProfile>();
+        u.AddProfile<ApplicationUserProfile>();
     });
 
     public static IQueryable<T> To<T>(this IQueryable self)

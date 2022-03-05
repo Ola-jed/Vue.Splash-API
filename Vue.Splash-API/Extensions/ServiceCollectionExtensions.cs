@@ -3,7 +3,7 @@ using System.Text;
 using AutoMapper;
 using Backblaze_Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,10 +11,16 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using Vue.Splash_API.Data;
-using Vue.Splash_API.Models;
 using Vue.Splash_API.Profiles;
+using Vue.Splash_API.Services.Auth;
+using Vue.Splash_API.Services.EmailVerification;
+using Vue.Splash_API.Services.ForgotPassword;
 using Vue.Splash_API.Services.Mail;
+using Vue.Splash_API.Services.Photos;
 using Vue.Splash_API.Services.Storage;
+using Vue.Splash_API.Services.Thumbnail;
+using Vue.Splash_API.Services.User;
+using Vue.Splash_API.Services.UserPhotos;
 
 namespace Vue.Splash_API.Extensions;
 
@@ -65,14 +71,6 @@ public static class ServiceCollectionExtensions
             Username = configuration["PgUserId"]
         };
         serviceCollection.AddDbContext<SplashContext>(opt => opt.UseNpgsql(builder.ConnectionString));
-    }
-
-    public static void ConfigureIdentity(this IServiceCollection serviceCollection)
-    {
-        serviceCollection
-            .AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedEmail = true)
-            .AddEntityFrameworkStores<SplashContext>()
-            .AddDefaultTokenProviders();
     }
 
     public static void ConfigureAuthentication(this IServiceCollection serviceCollection,
@@ -161,8 +159,22 @@ public static class ServiceCollectionExtensions
         MapperConfiguration config = new(u =>
         {
             u.AddProfile<PhotoProfile>();
-            u.AddProfile<UserProfile>();
+            u.AddProfile<ApplicationUserProfile>();
         });
         serviceCollection.AddSingleton(config.CreateMapper());
+    }
+
+    public static void AddServices(this IServiceCollection serviceCollection)
+    {
+        serviceCollection.AddScoped<IAuthService, AuthService>();
+        serviceCollection.AddSingleton<IStorageService, BackblazeStorageService>();
+        serviceCollection.AddScoped<IApplicationUserService, ApplicationUserService>();
+        serviceCollection.AddScoped<IPhotosService, PhotosService>();
+        serviceCollection.AddScoped<IThumbnailService, ThumbnailService>();
+        serviceCollection.AddScoped<IUserPhotosService, UserPhotosService>();
+        serviceCollection.AddScoped<IMailService, MailService>();
+        serviceCollection.AddScoped<IEmailVerificationService, EmailVerificationService>();
+        serviceCollection.AddScoped<IForgotPasswordService, ForgotPasswordService>();
+        serviceCollection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }
 }

@@ -1,11 +1,10 @@
 using System;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Vue.Splash_API.Models;
 
 namespace Vue.Splash_API.Data;
 
-public class SplashContext : IdentityDbContext<ApplicationUser>
+public class SplashContext : DbContext
 {
     public SplashContext(DbContextOptions<SplashContext> options) : base(options)
     {
@@ -23,5 +22,8 @@ public class SplashContext : IdentityDbContext<ApplicationUser>
         });
     }
 
+    public DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
     public DbSet<Photo> Photos { get; set; } = null!;
+    public DbSet<PasswordReset> PasswordResets { get; set; } = null!;
+    public DbSet<EmailVerification> EmailVerifications { get; set; } = null!;
 }
