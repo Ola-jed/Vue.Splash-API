@@ -3,18 +3,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using System;
 using Backblaze_Client;
-using Backblaze_Client.Log;
+using Serilog;
 
 namespace Vue.Splash_API.Services.Storage;
 
 public class BackblazeStorageService : IStorageService
 {
     private readonly BackblazeClient _client;
-    private bool _accountAuthorized = false;
+    private bool _accountAuthorized;
 
     public BackblazeStorageService(BackblazeConfig config)
     {
-        _client = new BackblazeClient(config, new Logger(LogLevel.High));
+        var logger = Log.ForContext(GetType());
+        _client = new BackblazeClient(config,logger);
     }
 
     public async Task<string> Save(IFormFile file)
