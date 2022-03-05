@@ -27,7 +27,6 @@ builder.Services.ConfigureBlobStorage(configuration);
 builder.Services.ConfigureSwagger();
 builder.Services.AddServices();
 builder.Services.AddMapper();
-builder.Services.ConfigureIdentity();
 builder.Services.AddMemoryCache();
 builder.Services.ConfigureCors(originsAllowed);
 builder.Services.ConfigureAuthentication(configuration);

@@ -9,32 +9,32 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1"/>
-        <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.1"/>
-        <PackageReference Include="Backblaze_Client" Version="1.0.0"/>
-        <PackageReference Include="FluentPaginator.Lib" Version="2.0.0"/>
-        <PackageReference Include="MailKit" Version="3.0.0-preview1"/>
-        <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0"/>
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.0"/>
-        <PackageReference Include="MimeKit" Version="3.0.0-preview1"/>
-        <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3"/>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0"/>
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+        <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.1" />
+        <PackageReference Include="Backblaze_Client" Version="1.0.0" />
+        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+        <PackageReference Include="FluentPaginator.Lib" Version="2.0.0" />
+        <PackageReference Include="MailKit" Version="3.0.0-preview1" />
+        <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.0" />
+        <PackageReference Include="MimeKit" Version="3.0.0-preview1" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.14.1"/>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.0"/>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.14.1"/>
-        <PackageReference Include="Serilog.AspNetCore" Version="5.0.0"/>
-        <PackageReference Include="Serilog.Extensions.Logging.File" Version="2.0.0"/>
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.14.1" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.14.1" />
+        <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+        <PackageReference Include="Serilog.Extensions.Logging.File" Version="2.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Images"/>
+        <Folder Include="Images" />
     </ItemGroup>
 
 </Project>

@@ -54,13 +54,8 @@ public class AccountController : ControllerBase
             return Unauthorized();
         }
 
-        var res = await _userService.UpdateUser(usr, accountUpdateDto);
-        return res.Succeeded
-            ? NoContent()
-            : StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                res.Errors
-            });
+        await _userService.UpdateUser(usr, accountUpdateDto);
+        return NoContent();
     }
 
     [HttpPut("Password")]
@@ -70,18 +65,14 @@ public class AccountController : ControllerBase
     public async Task<ActionResult> UpdatePassword(UpdatePasswordDto passwordDto)
     {
         var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name!);
-        if (usr == null || !await _userService.CheckPassword(usr.UserName, passwordDto.CurrentPassword))
+        if (usr == null ||
+            !await _authService.ValidateUserCredentials(new LoginDto(usr.UserName, passwordDto.CurrentPassword)))
         {
             return Unauthorized();
         }
 
-        var res = await _userService.UpdatePassword(usr, passwordDto.CurrentPassword, passwordDto.NewPassword);
-        return res.Succeeded
-            ? NoContent()
-            : StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                res.Errors
-            });
+        await _userService.UpdatePassword(usr, passwordDto.NewPassword);
+        return NoContent();
     }
 
     [HttpDelete]
@@ -96,19 +87,14 @@ public class AccountController : ControllerBase
             return Unauthorized();
         }
 
-        var loginDto = new LoginDto(usr.UserName!, passwordDto.Password);
+        var loginDto = new LoginDto(usr.UserName, passwordDto.Password);
         var validCredentials = await _authService.ValidateUserCredentials(loginDto);
         if (!validCredentials)
         {
             return Unauthorized();
         }
 
-        var res = await _userService.DeleteUser(usr);
-        return res.Succeeded
-            ? NoContent()
-            : StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                res.Errors
-            });
+        await _userService.DeleteUser(usr);
+        return NoContent();
     }
 }

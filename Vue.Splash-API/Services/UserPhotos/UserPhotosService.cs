@@ -16,7 +16,7 @@ public class UserPhotosService : IUserPhotosService
         _context = context;
     }
 
-    public async Task<PhotoReadDto?> GetUserPhoto(int id, string userId)
+    public async Task<PhotoReadDto?> GetUserPhoto(int id, int userId)
     {
         return await _context.Photos.AsNoTracking()
             .Where(p => p.ApplicationUserId == userId)
@@ -24,7 +24,7 @@ public class UserPhotosService : IUserPhotosService
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
-    public async Task<string?> GetUserPhotoPath(int id, string userId)
+    public async Task<string?> GetUserPhotoPath(int id, int userId)
     {
         return await _context.Photos.AsNoTracking()
             .Where(p => p.ApplicationUserId == userId && p.Id == id)
@@ -32,7 +32,7 @@ public class UserPhotosService : IUserPhotosService
             .FirstOrDefaultAsync();
     }
 
-    public async Task<string?> GetUserPhotoThumbnail(int photoId, string userId)
+    public async Task<string?> GetUserPhotoThumbnail(int photoId, int userId)
     {
         return await _context.Photos.AsNoTracking()
             .Where(p => p.Id == photoId && p.ApplicationUserId == userId)
@@ -40,8 +40,9 @@ public class UserPhotosService : IUserPhotosService
             .FirstOrDefaultAsync();
     }
 
-    public async Task<bool> PhotoExistsAndOwnedByUser(int photoId, string userId)
+    public async Task<bool> PhotoExistsAndOwnedByUser(int photoId, int userId)
     {
-        return await _context.Photos.AnyAsync(p => p.Id == photoId && p.ApplicationUserId == userId);
+        return await _context.Photos
+            .AnyAsync(p => p.Id == photoId && p.ApplicationUserId == userId);
     }
 }

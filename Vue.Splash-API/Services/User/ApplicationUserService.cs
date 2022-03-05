@@ -1,7 +1,6 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Vue.Splash_API.Data;
 using Vue.Splash_API.Dtos;
 using Vue.Splash_API.Models;
 
@@ -9,103 +8,65 @@ namespace Vue.Splash_API.Services.User;
 
 public class ApplicationUserService : IApplicationUserService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SplashContext _context;
 
-    public ApplicationUserService(UserManager<ApplicationUser> userManager)
+    public ApplicationUserService(SplashContext context)
     {
-        _userManager = userManager;
+        _context = context;
     }
 
-    public async Task<ApplicationUser?> FindUserById(string id)
+    public async Task<ApplicationUser?> FindUserById(int id)
     {
-        return await _userManager
-            .Users
-            .Include(usr => usr.Photos)
-            .FirstOrDefaultAsync(usr => usr.Id == id);
+        return await _context.ApplicationUsers
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    public async Task<ApplicationUser?> FindUserByIdentifier(string identifier)
+    {
+        return await FindUserByEmail(identifier) ?? await FindUserByUserName(identifier);
     }
 
     public async Task<ApplicationUser?> FindUserByUserName(string userName)
     {
-        return await _userManager
-            .Users
-            .Include(usr => usr.Photos)
-            .FirstOrDefaultAsync(usr => usr.UserName == userName);
-    }
-
-
-    public async Task<ApplicationUser?> FindUserByIdentifier(string identifier)
-    {
-        return await _userManager
-            .Users
-            .Include(usr => usr.Photos)
-            .FirstOrDefaultAsync(usr => usr.UserName == identifier || usr.Email == identifier);
+        return await _context.ApplicationUsers
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.UserName == userName);
     }
 
     public async Task<ApplicationUser?> FindUserByEmail(string email)
     {
-        return await _userManager
-            .Users
-            .Include(usr => usr.Photos)
-            .FirstOrDefaultAsync(usr => usr.Email == email);
+        return await _context.ApplicationUsers
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Email == email);
     }
 
-    public async Task<IList<string>> GetUserRoles(ApplicationUser applicationUser)
+    public async Task<ApplicationUser> CreateUser(ApplicationUser user, string password)
     {
-        return await _userManager.GetRolesAsync(applicationUser);
+        user.Password = BCrypt.Net.BCrypt.HashPassword(password);
+        var userEntry = _context.ApplicationUsers.Add(user);
+        await _context.SaveChangesAsync();
+        return userEntry.Entity;
     }
 
-    public async Task<IdentityResult> CreateUser(ApplicationUser user, string password)
+    public async Task UpdateUser(ApplicationUser initialValue, AccountUpdateDto updateDto)
     {
-        return await _userManager.CreateAsync(user, password);
-    }
-
-    public async Task<IdentityResult> UpdateUser(ApplicationUser initialValue, AccountUpdateDto updateDto)
-    {
-        initialValue.Email = updateDto.Email;
         initialValue.UserName = updateDto.Username;
-        return await _userManager.UpdateAsync(initialValue);
+        initialValue.Email = updateDto.Email;
+        _context.ApplicationUsers.Update(initialValue);
+        await _context.SaveChangesAsync();
     }
 
-    public async Task<IdentityResult> UpdatePassword(ApplicationUser user, string currentPassword,
-        string newPassword)
+    public async Task UpdatePassword(ApplicationUser user, string newPassword)
     {
-        return await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+        user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        _context.ApplicationUsers.Update(user);
+        await _context.SaveChangesAsync();
     }
 
-    public async Task<IdentityResult> DeleteUser(ApplicationUser user)
+    public async Task DeleteUser(ApplicationUser user)
     {
-        return await _userManager.DeleteAsync(user);
-    }
-
-    public async Task<bool> CheckPassword(string username, string password)
-    {
-        var user = await FindUserByUserName(username);
-        return user != null && await _userManager.CheckPasswordAsync(user, password);
-    }
-
-    public async Task<bool> IsEmailConfirmed(string email)
-    {
-        var user = await FindUserByEmail(email);
-        return user != null && await _userManager.IsEmailConfirmedAsync(user);
-    }
-
-    public async Task<string> GenerateResetPasswordToken(ApplicationUser user)
-    {
-        return await _userManager.GeneratePasswordResetTokenAsync(user);
-    }
-
-    public async Task<IdentityResult> ResetUserPassword(ApplicationUser user, string token, string newPassword)
-    {
-        return await _userManager.ResetPasswordAsync(user, token, newPassword);
-    }
-
-    public async Task<string> GenerateEmailVerificationToken(ApplicationUser user)
-    {
-        return await _userManager.GenerateEmailConfirmationTokenAsync(user);
-    }
-
-    public async Task<IdentityResult> VerifyEmail(ApplicationUser user, string token)
-    {
-        return await _userManager.ConfirmEmailAsync(user, token);
+        _context.ApplicationUsers.Remove(user);
+        await _context.SaveChangesAsync();
     }
 }

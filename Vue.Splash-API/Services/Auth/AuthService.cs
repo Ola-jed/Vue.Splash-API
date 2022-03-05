@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Vue.Splash_API.Data;
 using Vue.Splash_API.Dtos;
 using Vue.Splash_API.Models;
 using Vue.Splash_API.Services.User;
@@ -18,42 +18,38 @@ public class AuthService : IAuthService
 {
     private readonly IApplicationUserService _userService;
     private readonly IConfiguration _configuration;
+    private readonly SplashContext _context;
 
-    public AuthService(IConfiguration configuration, IApplicationUserService userService)
+    public AuthService(IConfiguration configuration,
+        IApplicationUserService userService,
+        SplashContext context)
     {
         _configuration = configuration;
         _userService = userService;
+        _context = context;
     }
 
     public async Task<bool> ValidateUserCredentials(LoginDto loginDto)
     {
         var user = await _userService.FindUserByIdentifier(loginDto.Identifier);
-        return user != null && await _userService.CheckPassword(user.UserName, loginDto.Password);
+        return user != null && BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password);
     }
 
-    public async Task<bool> IsEmailConfirmed(string identifier)
+    public async Task<ApplicationUser?> RegisterUser(RegisterDto registerDto)
     {
-        var usr = await _userService.FindUserByIdentifier(identifier);
-        return usr != null && await _userService.IsEmailConfirmed(usr.Email);
-    }
-
-    public async Task<(IdentityResult?, ApplicationUser?)> RegisterUser(RegisterDto registerDto)
-    {
-        var userExists = await _userService.FindUserByUserName(registerDto.Username);
-        if (userExists != null)
+        var similarUserExists = await _context.ApplicationUsers
+            .AnyAsync(x => x.Email == registerDto.Email || x.UserName == registerDto.Username);
+        if (similarUserExists)
         {
-            return (null, null);
+            return null;
         }
 
         var user = new ApplicationUser
         {
             Email = registerDto.Email,
-            SecurityStamp = Guid.NewGuid().ToString(),
-            UserName = registerDto.Username,
-            RegisterDate = DateTime.Now
+            UserName = registerDto.Username
         };
-        var result = await _userService.CreateUser(user, registerDto.Password);
-        return (result, user);
+        return await _userService.CreateUser(user, registerDto.Password);
     }
 
     public async Task<JwtSecurityToken?> GenerateJwt(LoginDto loginDto)
@@ -69,13 +65,12 @@ public class AuthService : IAuthService
             return null;
         }
 
-        var userRoles = await _userService.GetUserRoles(user);
         var authClaims = new List<Claim>
         {
             new(ClaimTypes.Name, user.UserName),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new("Id", user.Id.ToString())
         };
-        authClaims.AddRange(userRoles.Select(userRole => new Claim(ClaimTypes.Role, userRole)));
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
         return new JwtSecurityToken(
             _configuration["JWT:ValidIssuer"],
