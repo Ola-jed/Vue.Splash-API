@@ -12,7 +12,7 @@ using Vue.Splash_API.Data;
 namespace Vue.Splash_API.Migrations
 {
     [DbContext(typeof(SplashContext))]
-    [Migration("20220305125536_Initial")]
+    [Migration("20220306142324_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
