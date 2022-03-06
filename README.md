@@ -31,10 +31,6 @@ You can also try the [frontend](https://github.com/tobihans/Vue.Splash) built by
 
 ## TODO
 
-- [x] Finish LocalStorageService implementation
-  - [x] Delete a local file
-- [x] Make an custom client for [Backblaze](https://www.backblaze.com/)
-- [x] Password reset (import [DotWiki](https://github.com/Ola-jed/DotWikiApi) mail client)
 - [ ] Unit tests
 
-> If you cannot setup backblaze or azure, you can swap the storage service to use  by `LocalStorageService` in the file `Startup.cs` (line 40)
+> If you cannot setup backblaze or azure, you can swap the storage service to use  by `LocalStorageService` in the file `Extensions/ServiceCollectionExtensions.cs` (line 167)
