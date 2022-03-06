@@ -42,8 +42,8 @@ public class AuthServiceTest
         var registerDto = new RegisterDto("John Doe", "johndoe@splash.com", "password");
         var result = await service.RegisterUser(registerDto);
         result.Should().NotBeNull();
-        result.UserName.Should().Be("John Doe");
-        result.Email.Should().Be("johndoe@splash.com");
+        result!.UserName.Should().Be("John Doe");
+        result!.Email.Should().Be("johndoe@splash.com");
     }
 
     [Fact]

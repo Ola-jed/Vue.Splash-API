@@ -49,14 +49,11 @@ public static class ServiceCollectionExtensions
     public static void ConfigureBackblaze(this IServiceCollection serviceCollection,
         IConfiguration configuration)
     {
-        var config = new BackblazeConfig()
-        {
-            KeyId = configuration["KeyId"],
-            AppKey = configuration["AppKey"],
-            BucketId = configuration["BucketId"],
-            ApiBase = "https://api.backblazeb2.com/b2api/v2/"
-        };
-        serviceCollection.AddSingleton(config);
+        var cfg = configuration.GetSection("BackblazeConfig");
+        cfg["KeyId"] = configuration["KeyId"];
+        cfg["AppKey"] = configuration["AppKey"];
+        cfg["BucketId"] = configuration["BucketId"];
+        serviceCollection.Configure<BackblazeConfig>(cfg);
     }
 
     public static void ConfigurePgsql(this IServiceCollection serviceCollection,
@@ -86,7 +83,7 @@ public static class ServiceCollectionExtensions
             {
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new TokenValidationParameters()
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = false,
                     ValidateAudience = false,

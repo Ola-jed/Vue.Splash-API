@@ -23,8 +23,8 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("Register")]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Register(RegisterDto registerDto)
     {
         var user = await _authService.RegisterUser(registerDto);
@@ -41,9 +41,9 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("Login")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<TokenDto>> Login(LoginDto model)
     {
         var token = await _authService.GenerateJwt(model);

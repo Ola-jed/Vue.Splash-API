@@ -21,7 +21,8 @@ public class EmailVerificationController : ControllerBase
 
     public EmailVerificationController(IApplicationUserService userService,
         IMailService mailService,
-        IConfiguration configuration, IEmailVerificationService emailVerificationService)
+        IConfiguration configuration,
+        IEmailVerificationService emailVerificationService)
     {
         _userService = userService;
         _mailService = mailService;

@@ -18,8 +18,7 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog();
-builder.Services.AddControllers()
-    .ConfigureApiBehaviorOptions(options => { options.SuppressMapClientErrors = true; });
+builder.Services.AddControllers().ConfigureApiBehaviorOptions(options => options.SuppressMapClientErrors = true);
 builder.Services.ConfigurePgsql(configuration);
 builder.Services.ConfigureBackblaze(configuration);
 builder.Services.ConfigureMail(configuration);
