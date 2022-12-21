@@ -28,7 +28,7 @@ public class AuthServiceTest
         };
         var context = SplashContextBuilder.Build();
         context.ApplicationUsers.Add(user);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         var service = GetService(context);
         var registerDto = new RegisterDto("John Doe", "johndoe@splash.com", "password");
         var result = await service.RegisterUser(registerDto);
@@ -43,7 +43,7 @@ public class AuthServiceTest
         var result = await service.RegisterUser(registerDto);
         result.Should().NotBeNull();
         result!.UserName.Should().Be("John Doe");
-        result!.Email.Should().Be("johndoe@splash.com");
+        result.Email.Should().Be("johndoe@splash.com");
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public class AuthServiceTest
         };
         var context = SplashContextBuilder.Build();
         context.ApplicationUsers.Add(user);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         var service = GetService(context);
         var loginDto = new LoginDto(user.UserName, "password");
         var result = await service.ValidateUserCredentials(loginDto);
@@ -79,7 +79,7 @@ public class AuthServiceTest
         };
         var context = SplashContextBuilder.Build();
         context.ApplicationUsers.Add(user);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         var service = GetService(context);
         var loginDto = new LoginDto(user.Email, "password");
         var result = await service.ValidateUserCredentials(loginDto);
@@ -99,7 +99,7 @@ public class AuthServiceTest
         };
         var context = SplashContextBuilder.Build();
         context.ApplicationUsers.Add(user);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         var service = GetService(context);
         var loginDto = new LoginDto(user.UserName, "invalid_password");
         var result = await service.ValidateUserCredentials(loginDto);
@@ -119,7 +119,7 @@ public class AuthServiceTest
         };
         var context = SplashContextBuilder.Build();
         context.ApplicationUsers.Add(user);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         var service = GetService(context);
         var loginDto = new LoginDto(user.UserName, "password");
         var result = await service.GenerateJwt(loginDto);
@@ -139,7 +139,7 @@ public class AuthServiceTest
         };
         var context = SplashContextBuilder.Build();
         context.ApplicationUsers.Add(user);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         var service = GetService(context);
         var loginDto = new LoginDto(user.UserName, "invalid_password");
         var result = await service.GenerateJwt(loginDto);
@@ -148,7 +148,7 @@ public class AuthServiceTest
 
     private static IAuthService GetService(SplashContext? ctx = null)
     {
-        var inMemorySettings = new Dictionary<string, string>
+        var inMemorySettings = new Dictionary<string, string?>
         {
             { "JWT:Secret", "702357898AD899DA" },
             { "JWT:ValidIssuer", "Vue.Splash" },

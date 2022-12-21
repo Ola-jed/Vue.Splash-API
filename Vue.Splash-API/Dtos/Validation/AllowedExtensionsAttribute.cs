@@ -14,9 +14,7 @@ public class AllowedExtensionsAttribute : ValidationAttribute
         _extensions = extensions.Split(",");
     }
 
-    protected override ValidationResult? IsValid(
-        object? value,
-        ValidationContext validationContext)
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         if (value is not IFormFile file)
         {

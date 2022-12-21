@@ -27,7 +27,7 @@ public class ForgotPasswordController : ControllerBase
         _userService = userService;
         _forgotPasswordService = forgotPasswordService;
         _mailService = mailService;
-        _frontUrl = configuration["FrontUrl"];
+        _frontUrl = configuration["FrontUrl"]!;
     }
 
     [HttpPost("Forgot")]
@@ -61,9 +61,6 @@ public class ForgotPasswordController : ControllerBase
         var result = await _forgotPasswordService.ResetUserPassword(user, passwordResetDto.Token, passwordResetDto.Password);
         return result
             ? NoContent()
-            : StatusCode(StatusCodes.Status500InternalServerError, new
-            {
-                Message = "Password reset failed"
-            });
+            : StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Password reset failed" });
     }
 }

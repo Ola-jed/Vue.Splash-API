@@ -9,7 +9,6 @@ using FluentPaginator.Lib.Parameter;
 using Microsoft.EntityFrameworkCore;
 using Vue.Splash_API.Data;
 using Vue.Splash_API.Dtos;
-using Vue.Splash_API.Extensions;
 using Vue.Splash_API.Models;
 
 namespace Vue.Splash_API.Services.Photos;
@@ -37,26 +36,24 @@ public class PhotosService : IPhotosService
     {
         return await Task.Run(() => _context.Photos.AsNoTracking()
             .Where(predicate)
-            .To<PhotoReadDto>()
-            .UrlPaginate(urlPaginationParameter, p => p.Id));
+            .UrlPaginate(urlPaginationParameter, p => p.Id)
+            .Map(x => _mapper.Map<PhotoReadDto>(x))
+        );
     }
 
     public async Task UpdatePhoto(int id, PhotoUpdateDto photoUpdateDto)
     {
-        var photo = await _context.Photos.FindAsync(id);
-        _mapper.Map(photoUpdateDto, photo);
-        await _context.SaveChangesAsync();
+        await _context.Photos
+            .Where(x => x.Id == id)
+            .ExecuteUpdateAsync(x => x.SetProperty(p => p.Label, photoUpdateDto.Label)
+                .SetProperty(p => p.Description, photoUpdateDto.Description)
+            );
     }
 
     public async Task DeletePhoto(int id)
     {
-        var photo = await _context.Photos.FindAsync(id);
-        if (photo == null)
-        {
-            return;
-        }
-
-        _context.Photos.Remove(photo);
-        await _context.SaveChangesAsync();
+        await _context.Photos
+            .Where(x => x.Id == id)
+            .ExecuteDeleteAsync();
     }
 }

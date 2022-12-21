@@ -20,9 +20,7 @@ public class AuthService : IAuthService
     private readonly IConfiguration _configuration;
     private readonly SplashContext _context;
 
-    public AuthService(IConfiguration configuration,
-        IApplicationUserService userService,
-        SplashContext context)
+    public AuthService(IConfiguration configuration, IApplicationUserService userService, SplashContext context)
     {
         _configuration = configuration;
         _userService = userService;
@@ -71,7 +69,7 @@ public class AuthService : IAuthService
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(CustomClaims.Id, user.Id.ToString())
         };
-        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!));
         return new JwtSecurityToken(
             expires: DateTime.Now.AddHours(8),
             claims: authClaims,

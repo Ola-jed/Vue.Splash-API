@@ -33,7 +33,7 @@ public class EmailVerificationTest
             Password = "pwd"
         };
         ctx.ApplicationUsers.Add(user);
-        ctx.SaveChanges();
+        await ctx.SaveChangesAsync();
         var service = GetService(ctx);
         var result = await service.IsEmailConfirmed("John Doe");
         result.Should().BeFalse();
@@ -51,7 +51,7 @@ public class EmailVerificationTest
             Password = "pwd"
         };
         ctx.ApplicationUsers.Add(user);
-        ctx.SaveChanges();
+        await ctx.SaveChangesAsync();
         var service = GetService(ctx);
         var result = await service.GenerateEmailVerificationToken(user);
         result.Should().NotBeNullOrWhiteSpace();
@@ -70,7 +70,7 @@ public class EmailVerificationTest
             Password = "pwd"
         };
         ctx.ApplicationUsers.Add(user);
-        ctx.SaveChanges();
+        await ctx.SaveChangesAsync();
         var service = GetService(ctx);
         var result = await service.VerifyEmail(user, "token");
         result.Should().BeFalse();
@@ -88,7 +88,7 @@ public class EmailVerificationTest
             Password = "pwd"
         };
         ctx.ApplicationUsers.Add(user);
-        ctx.SaveChanges();
+        await ctx.SaveChangesAsync();
         var service = GetService(ctx);
         var token = await service.GenerateEmailVerificationToken(user);
         var result = await service.VerifyEmail(user, token);
@@ -97,7 +97,7 @@ public class EmailVerificationTest
     
     private static IEmailVerificationService GetService(SplashContext? ctx = null)
     {
-        var inMemorySettings = new Dictionary<string, string>
+        var inMemorySettings = new Dictionary<string, string?>
         {
             { "Code:Lifetime", "10" }
         };

@@ -42,7 +42,6 @@ public class UserPhotosService : IUserPhotosService
 
     public async Task<bool> PhotoExistsAndOwnedByUser(int photoId, int userId)
     {
-        return await _context.Photos
-            .AnyAsync(p => p.Id == photoId && p.ApplicationUserId == userId);
+        return await _context.Photos.AnyAsync(p => p.Id == photoId && p.ApplicationUserId == userId);
     }
 }

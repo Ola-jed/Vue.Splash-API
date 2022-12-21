@@ -19,9 +19,7 @@ public class AccountController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IAuthService _authService;
 
-    public AccountController(IApplicationUserService userService,
-        IMapper mapper,
-        IAuthService authService)
+    public AccountController(IApplicationUserService userService, IMapper mapper, IAuthService authService)
     {
         _userService = userService;
         _mapper = mapper;
@@ -66,8 +64,7 @@ public class AccountController : ControllerBase
     public async Task<ActionResult> UpdatePassword(UpdatePasswordDto passwordDto)
     {
         var usr = await _userService.FindUserById(this.GetUserId());
-        if (usr == null ||
-            !await _authService.ValidateUserCredentials(new LoginDto(usr.UserName, passwordDto.CurrentPassword)))
+        if (usr == null || !await _authService.ValidateUserCredentials(new LoginDto(usr.UserName, passwordDto.CurrentPassword)))
         {
             return Unauthorized();
         }

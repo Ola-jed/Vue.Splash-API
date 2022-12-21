@@ -16,7 +16,7 @@ public class ForgotPasswordService: IForgotPasswordService
     public ForgotPasswordService(SplashContext context,IConfiguration configuration)
     {
         _context = context;
-        _tokenLifetimeInMinutes = int.Parse(configuration.GetSection("Code:Lifetime").Value);
+        _tokenLifetimeInMinutes = int.Parse(configuration.GetSection("Code:Lifetime").Value!);
     }
     
     public async Task<string> CreateResetPasswordToken(ApplicationUser user)

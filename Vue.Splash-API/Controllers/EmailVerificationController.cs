@@ -27,7 +27,7 @@ public class EmailVerificationController : ControllerBase
         _userService = userService;
         _mailService = mailService;
         _emailVerificationService = emailVerificationService;
-        _frontUrl = configuration["FrontUrl"];
+        _frontUrl = configuration["FrontUrl"]!;
     }
 
     [HttpPost]
@@ -59,11 +59,6 @@ public class EmailVerificationController : ControllerBase
         }
 
         var result = await _emailVerificationService.VerifyEmail(user, emailVerificationDto.Token);
-        return result
-            ? Ok()
-            : BadRequest(new
-            {
-                Message = "Email verification failed" 
-            });
+        return result ? Ok() : BadRequest(new { Message = "Email verification failed" });
     }
 }

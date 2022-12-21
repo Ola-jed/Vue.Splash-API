@@ -15,8 +15,7 @@ public class AuthController : ControllerBase
     private readonly IAuthService _authService;
     private readonly IEmailVerificationService _emailVerificationService;
     
-    public AuthController(IAuthService authService,
-        IEmailVerificationService emailVerificationService)
+    public AuthController(IAuthService authService, IEmailVerificationService emailVerificationService)
     {
         _authService = authService;
         _emailVerificationService = emailVerificationService;
@@ -54,10 +53,7 @@ public class AuthController : ControllerBase
 
         if (!await _emailVerificationService.IsEmailConfirmed(model.Identifier))
         {
-            return BadRequest(new
-            {
-                Message = "Email not verified"
-            });
+            return BadRequest(new { Message = "Email not verified" });
         }
 
         return new TokenDto(new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
