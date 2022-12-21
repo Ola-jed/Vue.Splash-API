@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Vue.Splash_API.Dtos;
+using Vue.Splash_API.Extensions;
 using Vue.Splash_API.Services.Auth;
 using Vue.Splash_API.Services.User;
 
@@ -18,9 +19,7 @@ public class AccountController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IAuthService _authService;
 
-    public AccountController(IApplicationUserService userService,
-        IMapper mapper,
-        IAuthService authService)
+    public AccountController(IApplicationUserService userService, IMapper mapper, IAuthService authService)
     {
         _userService = userService;
         _mapper = mapper;
@@ -31,7 +30,7 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> Get()
     {
-        var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name!);
+        var usr = await _userService.FindUserById(this.GetUserId());
         return Ok(_mapper.Map<UserReadDto>(usr));
     }
 
@@ -41,7 +40,7 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> Put(AccountUpdateDto accountUpdateDto)
     {
-        var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name!);
+        var usr = await _userService.FindUserById(this.GetUserId());
         if (usr == null)
         {
             return StatusCode(StatusCodes.Status500InternalServerError);
@@ -64,9 +63,8 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> UpdatePassword(UpdatePasswordDto passwordDto)
     {
-        var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name!);
-        if (usr == null ||
-            !await _authService.ValidateUserCredentials(new LoginDto(usr.UserName, passwordDto.CurrentPassword)))
+        var usr = await _userService.FindUserById(this.GetUserId());
+        if (usr == null || !await _authService.ValidateUserCredentials(new LoginDto(usr.UserName, passwordDto.CurrentPassword)))
         {
             return Unauthorized();
         }
@@ -81,7 +79,7 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> Delete(PasswordDto passwordDto)
     {
-        var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name!);
+        var usr = await _userService.FindUserById(this.GetUserId());
         if (usr == null)
         {
             return Unauthorized();

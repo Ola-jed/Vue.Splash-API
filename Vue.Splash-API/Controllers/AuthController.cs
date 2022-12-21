@@ -15,16 +15,15 @@ public class AuthController : ControllerBase
     private readonly IAuthService _authService;
     private readonly IEmailVerificationService _emailVerificationService;
     
-    public AuthController(IAuthService authService,
-        IEmailVerificationService emailVerificationService)
+    public AuthController(IAuthService authService, IEmailVerificationService emailVerificationService)
     {
         _authService = authService;
         _emailVerificationService = emailVerificationService;
     }
 
     [HttpPost("Register")]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Register(RegisterDto registerDto)
     {
         var user = await _authService.RegisterUser(registerDto);
@@ -41,9 +40,9 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("Login")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<TokenDto>> Login(LoginDto model)
     {
         var token = await _authService.GenerateJwt(model);
@@ -54,10 +53,7 @@ public class AuthController : ControllerBase
 
         if (!await _emailVerificationService.IsEmailConfirmed(model.Identifier))
         {
-            return BadRequest(new
-            {
-                Message = "Email not verified"
-            });
+            return BadRequest(new { Message = "Email not verified" });
         }
 
         return new TokenDto(new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);

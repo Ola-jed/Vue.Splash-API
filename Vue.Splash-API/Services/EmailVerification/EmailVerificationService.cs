@@ -16,7 +16,7 @@ public class EmailVerificationService : IEmailVerificationService
     public EmailVerificationService(SplashContext context,IConfiguration configuration)
     {
         _context = context;
-        _tokenLifetimeInMinutes = int.Parse(configuration["Code.TokenLifetimeInMinutes"] ?? "30");
+        _tokenLifetimeInMinutes = int.Parse(configuration["Code:Lifetime"] ?? "30");
     }
 
     public async Task<bool> IsEmailConfirmed(string identifier)

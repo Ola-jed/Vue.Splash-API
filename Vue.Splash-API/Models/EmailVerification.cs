@@ -9,6 +9,7 @@ public class EmailVerification : Model
     [StringLength(150)]
     public string Token { get; set; } = null!;
 
+    [Required]
     [ForeignKey(nameof(ApplicationUser))]
     public int ApplicationUserId { get; set; }
 

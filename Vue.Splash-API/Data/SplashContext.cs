@@ -11,10 +11,10 @@ public class SplashContext : DbContext
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(builder);
-        builder.Entity<ApplicationUser>(user =>
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<ApplicationUser>(user =>
         {
             user.HasMany(a => a.Photos)
                 .WithOne()

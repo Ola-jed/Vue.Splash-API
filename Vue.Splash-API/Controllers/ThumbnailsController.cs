@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Vue.Splash_API.Extensions;
 using Vue.Splash_API.Services.Storage;
 using Vue.Splash_API.Services.User;
 using Vue.Splash_API.Services.UserPhotos;
@@ -30,7 +31,7 @@ public class ThumbnailsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> DownloadThumbnail(int photoId)
     {
-        var usr = await _userService.FindUserByUserName(HttpContext.User.Identity?.Name!);
+        var usr = await _userService.FindUserById(this.GetUserId());
         var thumbnail = await _userPhotosService.GetUserPhotoThumbnail(photoId, usr!.Id);
         return thumbnail == null
             ? NotFound()
