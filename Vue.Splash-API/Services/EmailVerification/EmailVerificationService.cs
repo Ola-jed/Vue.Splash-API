@@ -28,12 +28,11 @@ public class EmailVerificationService : IEmailVerificationService
     public async Task<string> GenerateEmailVerificationToken(ApplicationUser user)
     {
         var token = Guid.NewGuid().ToString().Replace("-", null);
-        var emailVerification = new Models.EmailVerification
+        _context.EmailVerifications.Add(new Models.EmailVerification
         {
             ApplicationUserId = user.Id,
             Token = token
-        };
-        _context.EmailVerifications.Add(emailVerification);
+        });
         await _context.SaveChangesAsync();
         return token;
     }
