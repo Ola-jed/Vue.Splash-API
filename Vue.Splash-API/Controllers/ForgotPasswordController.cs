@@ -14,10 +14,10 @@ namespace Vue.Splash_API.Controllers;
 [Route("api/Password")]
 public class ForgotPasswordController : ControllerBase
 {
-    private readonly IApplicationUserService _userService;
     private readonly IForgotPasswordService _forgotPasswordService;
-    private readonly IMailService _mailService;
     private readonly string _frontUrl;
+    private readonly IMailService _mailService;
+    private readonly IApplicationUserService _userService;
 
     public ForgotPasswordController(IApplicationUserService userService,
         IForgotPasswordService forgotPasswordService,
@@ -52,13 +52,7 @@ public class ForgotPasswordController : ControllerBase
     [ProducesResponseType(typeof(ErrorDto),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> ResetUserPassword(PasswordResetDto passwordResetDto)
     {
-        var user = await _userService.FindUserByEmail(passwordResetDto.Email);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        var result = await _forgotPasswordService.ResetUserPassword(user, passwordResetDto.Token, passwordResetDto.Password);
+        var result = await _forgotPasswordService.ResetUserPassword(passwordResetDto.Token, passwordResetDto.Password);
         return result ? NoContent() : BadRequest(new ErrorDto("Invalid or expired token"));
     }
 }
