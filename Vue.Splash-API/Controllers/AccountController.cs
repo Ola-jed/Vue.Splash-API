@@ -37,13 +37,12 @@ public class AccountController : ControllerBase
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> Put(AccountUpdateDto accountUpdateDto)
     {
         var usr = await _userService.FindUserById(this.GetUserId());
         if (usr == null)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return Unauthorized();
         }
 
         var loginDto = new LoginDto(usr.UserName, accountUpdateDto.Password);
@@ -60,7 +59,6 @@ public class AccountController : ControllerBase
     [HttpPut("Password")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> UpdatePassword(UpdatePasswordDto passwordDto)
     {
         var usr = await _userService.FindUserById(this.GetUserId());
@@ -76,7 +74,6 @@ public class AccountController : ControllerBase
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> Delete(PasswordDto passwordDto)
     {
         var usr = await _userService.FindUserById(this.GetUserId());

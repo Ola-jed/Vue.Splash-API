@@ -18,7 +18,7 @@ public class ForgotPasswordService: IForgotPasswordService
         _context = context;
         _tokenLifetimeInMinutes = int.Parse(configuration.GetSection("Code:Lifetime").Value!);
     }
-    
+
     public async Task<string> CreateResetPasswordToken(ApplicationUser user)
     {
         var token = Guid.NewGuid().ToString().Replace("-", null);
@@ -32,16 +32,18 @@ public class ForgotPasswordService: IForgotPasswordService
         return token;
     }
 
-    public async Task<bool> ResetUserPassword(ApplicationUser user, string token, string newPassword)
+    public async Task<bool> ResetUserPassword(string token, string newPassword)
     {
         var passwordReset = await _context.PasswordResets
+            .Include(p => p.ApplicationUser)
             .OrderByDescending(x => x.CreatedAt)
-            .FirstOrDefaultAsync(x => x.ApplicationUserId == user.Id && x.Token == token);
+            .FirstOrDefaultAsync(x => x.Token == token);
         if (passwordReset == null || passwordReset.CreatedAt < DateTime.Now.AddMinutes(-_tokenLifetimeInMinutes))
         {
             return false;
         }
 
+        var user = passwordReset.ApplicationUser;
         user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
         _context.PasswordResets.Remove(passwordReset);
         _context.ApplicationUsers.Update(user);

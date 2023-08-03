@@ -48,17 +48,10 @@ public class EmailVerificationController : ControllerBase
 
     [HttpPost("Verify")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorDto),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> VerifyEmail(EmailVerificationDto emailVerificationDto)
     {
-        var user = await _userService.FindUserByEmail(emailVerificationDto.Email);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        var result = await _emailVerificationService.VerifyEmail(user, emailVerificationDto.Token);
-        return result ? Ok() : BadRequest(new { Message = "Email verification failed" });
+        var result = await _emailVerificationService.VerifyEmail(emailVerificationDto.Token);
+        return result ? Ok() : BadRequest(new ErrorDto("Email verification failed"));
     }
 }

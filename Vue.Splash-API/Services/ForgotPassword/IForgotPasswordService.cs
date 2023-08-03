@@ -6,5 +6,5 @@ namespace Vue.Splash_API.Services.ForgotPassword;
 public interface IForgotPasswordService
 {
     Task<string> CreateResetPasswordToken(ApplicationUser user);
-    Task<bool> ResetUserPassword(ApplicationUser user, string token, string newPassword);
+    Task<bool> ResetUserPassword(string token, string newPassword);
 }

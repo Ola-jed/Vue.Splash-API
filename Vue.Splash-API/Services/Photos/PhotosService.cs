@@ -34,11 +34,12 @@ public class PhotosService : IPhotosService
     public async Task<UrlPage<PhotoReadDto>> Find(Expression<Func<Photo, bool>> predicate,
         UrlPaginationParameter urlPaginationParameter)
     {
-        return await Task.Run(() => _context.Photos.AsNoTracking()
+        var urlPage = await _context.Photos
+            .AsNoTracking()
             .Where(predicate)
-            .UrlPaginate(urlPaginationParameter, p => p.Id)
-            .Map(x => _mapper.Map<PhotoReadDto>(x))
-        );
+            .AsyncUrlPaginate(urlPaginationParameter, p => p.Id);
+    
+        return urlPage.Map(x => _mapper.Map<PhotoReadDto>(x));
     }
 
     public async Task UpdatePhoto(int id, PhotoUpdateDto photoUpdateDto)

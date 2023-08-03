@@ -7,5 +7,5 @@ public interface IEmailVerificationService
 {
     Task<bool> IsEmailConfirmed(string identifier);
     Task<string> GenerateEmailVerificationToken(ApplicationUser user);
-    Task<bool> VerifyEmail(ApplicationUser user, string token);
+    Task<bool> VerifyEmail(string token);
 }

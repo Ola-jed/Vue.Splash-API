@@ -23,25 +23,21 @@ public class AuthController : ControllerBase
 
     [HttpPost("Register")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ErrorDto), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Register(RegisterDto registerDto)
     {
         var user = await _authService.RegisterUser(registerDto);
         if (user == null)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                new
-                {
-                    Status = "Error",
-                    Message = "User already exists"
-                });
+            return StatusCode(StatusCodes.Status400BadRequest, new ErrorDto("User already exists"));
         }
+        
         return NoContent();
     }
 
     [HttpPost("Login")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorDto),StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<TokenDto>> Login(LoginDto model)
     {
@@ -53,7 +49,7 @@ public class AuthController : ControllerBase
 
         if (!await _emailVerificationService.IsEmailConfirmed(model.Identifier))
         {
-            return BadRequest(new { Message = "Email not verified" });
+            return StatusCode(StatusCodes.Status403Forbidden,new ErrorDto("Email not verified"));
         }
 
         return new TokenDto(new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);

@@ -19,6 +19,6 @@ public class ApplicationUser : Model
     [StringLength(255)]
     public string Password { get; set; } = null!;
     
-    public DateTime? EmailVerifiedAt { get; set; } = null;
+    public DateTime? EmailVerifiedAt { get; set; }
     public ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
 }
