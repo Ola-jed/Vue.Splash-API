@@ -72,7 +72,7 @@ public class EmailVerificationTest
         ctx.ApplicationUsers.Add(user);
         await ctx.SaveChangesAsync();
         var service = GetService(ctx);
-        var result = await service.VerifyEmail(user, "token");
+        var result = await service.VerifyEmail("token");
         result.Should().BeFalse();
     }
     
@@ -91,7 +91,7 @@ public class EmailVerificationTest
         await ctx.SaveChangesAsync();
         var service = GetService(ctx);
         var token = await service.GenerateEmailVerificationToken(user);
-        var result = await service.VerifyEmail(user, token);
+        var result = await service.VerifyEmail(token);
         result.Should().BeTrue();
     }
     

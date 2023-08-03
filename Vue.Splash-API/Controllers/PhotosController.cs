@@ -64,6 +64,7 @@ public class PhotosController : ControllerBase
     }
 
     [HttpGet("Search")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<UrlPage<PhotoReadDto>> Search([FromQuery] PhotoSearchDto searchDto)
     {
         var urlPaginationParameter = new UrlPaginationParameter(searchDto.PageSize, searchDto.PageNumber,

@@ -37,16 +37,18 @@ public class EmailVerificationService : IEmailVerificationService
         return token;
     }
 
-    public async Task<bool> VerifyEmail(ApplicationUser user, string token)
+    public async Task<bool> VerifyEmail(string token)
     {
         var emailVerification = await _context.EmailVerifications
+            .Include(e => e.ApplicationUser)
             .OrderByDescending(x => x.CreatedAt)
-            .FirstOrDefaultAsync(x => x.ApplicationUserId == user.Id && x.Token == token);
+            .FirstOrDefaultAsync(x => x.Token == token);
         if (emailVerification == null || emailVerification.CreatedAt < DateTime.Now.AddMinutes(-_tokenLifetimeInMinutes))
         {
             return false;
         }
 
+        var user = emailVerification.ApplicationUser;
         user.EmailVerifiedAt = DateTime.Now;
         _context.EmailVerifications.Remove(emailVerification);
         _context.ApplicationUsers.Update(user);

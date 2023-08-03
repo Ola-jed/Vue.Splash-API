@@ -31,7 +31,7 @@ public class ForgotPasswordController : ControllerBase
     }
 
     [HttpPost("Forgot")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> SendPasswordResetMail(ForgotPasswordDto forgotPasswordDto)
     {
@@ -43,13 +43,13 @@ public class ForgotPasswordController : ControllerBase
 
         var token = await _forgotPasswordService.CreateResetPasswordToken(user);
         await _mailService.SendEmailAsync(new ForgotPasswordMail(user.UserName, user.Email, token, _frontUrl));
-        return Ok();
+        return NoContent();
     }
 
     [HttpPost("Reset")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ErrorDto),StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> ResetUserPassword(PasswordResetDto passwordResetDto)
     {
         var user = await _userService.FindUserByEmail(passwordResetDto.Email);
@@ -59,8 +59,6 @@ public class ForgotPasswordController : ControllerBase
         }
 
         var result = await _forgotPasswordService.ResetUserPassword(user, passwordResetDto.Token, passwordResetDto.Password);
-        return result
-            ? NoContent()
-            : StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Password reset failed" });
+        return result ? NoContent() : BadRequest(new ErrorDto("Invalid or expired token"));
     }
 }
