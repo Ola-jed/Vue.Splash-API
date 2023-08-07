@@ -1,6 +1,6 @@
+using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MailKit.Security;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Vue.Splash_API.Services.Mail.Mailable;
@@ -18,7 +18,7 @@ public class MailService : IMailService
 
     public async Task SendEmailAsync(IMailable mailable)
     {
-        var email = await mailable.Build();
+        var email = mailable.Build();
         email.Sender = MailboxAddress.Parse(_settings.MailUser);
         using var smtp = new SmtpClient();
         await smtp.ConnectAsync(_settings.Host, _settings.Port, SecureSocketOptions.StartTls);
