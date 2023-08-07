@@ -11,4 +11,4 @@ Or copy the following link into your browser
 
 Thanks.
 Vue.Splash
-Copyright © 2021 Vue.Splash All Rights Reserved
+Copyright © [[_year]] Vue.Splash All Rights Reserved
